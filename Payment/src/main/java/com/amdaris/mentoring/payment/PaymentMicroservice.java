@@ -1,11 +1,11 @@
-package com.amdaris.mantoring.payment;
+package com.amdaris.mentoring.payment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PaymentService {
+public class PaymentMicroservice {
     public static void main(String[] args) {
-        SpringApplication.run(PaymentService.class);
+        SpringApplication.run(PaymentMicroservice.class);
     }
 }
