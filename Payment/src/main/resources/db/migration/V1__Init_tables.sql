@@ -5,7 +5,7 @@ CREATE TABLE payment_method
     details VARCHAR(255)
 );
 
-CREATE TABLE payment
+CREATE TABLE payment_history
 (
     id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     payment_method_id SMALLINT,
