@@ -43,27 +43,18 @@ public class PaypalPaymentService implements OrderPaymentService<Payment, Paypal
         paypalPaymentOrder.setMethod(orderPaymentDetails.getMethod());
         paypalPaymentOrder.setIntent("sale");
         paypalPaymentOrder.setDescription(orderPaymentDetails.getDetails());
-        paypalPaymentOrder.setSuccessUrl(host+success);
-        paypalPaymentOrder.setCancelUrl(host+cancel);
+        paypalPaymentOrder.setSuccessUrl(host + success);
+        paypalPaymentOrder.setCancelUrl(host + cancel);
 
         Payment paymentData = createPayment(paypalPaymentOrder);
 
-        Payment paypalPayment = paymentData.create(apiContext);
-
-        for(Links link : paypalPayment.getLinks()) {
-            if(link.getRel().equals("approval_url")) {
-                return "redirect:"+link.getHref();
+        for (Links link : paymentData.getLinks()) {
+            if (link.getRel().equals("approval_url")) {
+                return "redirect:" + link.getHref();
             }
         }
 
         return "Nothing happened";
-        /*Payment paymentResult = executePayment(paymentData.getId(),
-                paymentData.getPayer().getPayerInfo().getPayerId());
-
-        if (paymentResult.getState().equals("approved")) {
-            return "Payment success,"+paymentResult.getNoteToPayer();
-        }
-        return "Payment issues";*/
     }
 
     @Override
