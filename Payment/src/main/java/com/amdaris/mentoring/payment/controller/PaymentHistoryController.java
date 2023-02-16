@@ -18,35 +18,20 @@ public class PaymentHistoryController {
 
     @GetMapping(value = {"", "/"}, produces = "application/json")
     public ResponseEntity<?> findAll() {
-        try {
             LOGGER.info("Getting payment list");
             return ResponseEntity.ok(paymentHistoryService.findAll());
-        } catch (Exception e) {
-            LOGGER.error("Exception on getting payment list: ", e);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> findById(@PathVariable Byte id) {
-        try {
+    public ResponseEntity<?> findById(@PathVariable long id) {
             LOGGER.info("Getting payment by id");
             return ResponseEntity.ok(paymentHistoryService.findById(id));
-        } catch (Exception e) {
-            LOGGER.error("Exception on getting payment by id: ", e);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
     }
 
     @DeleteMapping(value = {"/{id}"}, produces = "application/json")
     ResponseEntity<?> deleteById(@PathVariable long id) {
-        try {
             LOGGER.info("Deleting payment by id");
             paymentHistoryService.deleteById(id);
             return ResponseEntity.ok("Payment with id - " + id + ", was deleted");
-        } catch (Exception e) {
-            LOGGER.error("Exception on deleting payment by id: ", e);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
     }
 }
