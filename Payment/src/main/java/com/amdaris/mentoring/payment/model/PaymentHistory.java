@@ -22,8 +22,7 @@ public class PaymentHistory {
 
     private LocalDateTime paymentDate;
 
-    @Column(name = "status", nullable = false,
-            columnDefinition = "ENUM('pending','complete','refunded','failed','revoked','cancelled')")
+    @Column(name = "status", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private PaymentStatus status;
 
