@@ -26,20 +26,14 @@ public class PaymentController {
     //TODO Add kafka and remove this endpoint
     @PostMapping(value = {"", "/"}, produces = "application/json")
     public ResponseEntity<?> kafkaMessage(@RequestBody OrderDetails orderDetails) {
-        try {
             PaymentDetails paymentDetails = new PaymentDetails();
             paymentDetails.setOrderDetails(orderDetails);
 
             return ResponseEntity.ok(paymentDetails);
-        } catch (Exception e) {
-            LOGGER.error("Error on getting data from Core Microservice - ", e);
-            return ResponseEntity.noContent().build();
-        }
     }
 
     @PostMapping(value = "/pay", produces = "application/json")
-    public ResponseEntity<?> paymentForm(@RequestBody PaymentDetails paymentDetails) {
-        try {
+    public ResponseEntity<?> paymentForm(@RequestBody PaymentDetails paymentDetails) throws Exception {
             Optional<PaymentService> payService = paymentService.stream()
                     .filter(service -> service.getClass().getName().contains(paymentDetails.getMethod()))
                     .findFirst();
@@ -48,9 +42,5 @@ public class PaymentController {
                 return ResponseEntity.ok(payService.get().payOrder(paymentDetails));
             }
             return new ResponseEntity<>("No found payment method", HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            LOGGER.error("Error on payment process - ", e);
-            return ResponseEntity.noContent().build();
-        }
     }
 }
