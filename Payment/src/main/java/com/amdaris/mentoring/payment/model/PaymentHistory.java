@@ -27,13 +27,4 @@ public class PaymentHistory {
     private PaymentStatus status;
 
     private Long orderId;
-
-    public enum PaymentStatus {
-        pending,
-        complete,
-        refunded,
-        failed,
-        revoked,
-        cancelled
-    }
 }

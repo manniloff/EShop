@@ -3,6 +3,7 @@ package com.amdaris.mentoring.payment.dto.converter;
 import com.amdaris.mentoring.payment.dto.PaymentHistoryDto;
 import com.amdaris.mentoring.payment.model.PaymentHistory;
 import com.amdaris.mentoring.payment.model.PaymentMethod;
+import com.amdaris.mentoring.payment.model.PaymentStatus;
 
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ public class PaymentConverter {
             paymentHistoryDto -> PaymentHistory.builder()
                     .paymentDate(paymentHistoryDto.getPaymentDate())
                     .paymentMethod(PaymentMethod.builder().title(paymentHistoryDto.getPaymentMethod()).build())
-                    .status(PaymentHistory.PaymentStatus.valueOf(paymentHistoryDto.getStatus()))
+                    .status(PaymentStatus.valueOf(paymentHistoryDto.getStatus()))
                     .orderId(paymentHistoryDto.getOrderId())
                     .build();
 
