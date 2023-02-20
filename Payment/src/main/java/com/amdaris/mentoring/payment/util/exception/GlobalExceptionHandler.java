@@ -1,4 +1,4 @@
-package com.amdaris.mentoring.payment.exception;
+package com.amdaris.mentoring.payment.util.exception;
 
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.extern.slf4j.Slf4j;
