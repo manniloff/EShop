@@ -1,11 +1,11 @@
-package com.amdaris.mantoring.core;
+package com.amdaris.mentoring.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CoreService {
+public class OrderService {
     public static void main(String[] args) {
-        SpringApplication.run(CoreService.class);
+        SpringApplication.run(OrderService.class);
     }
 }
