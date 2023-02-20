@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<?> handleEntityNotFoundException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return new ResponseEntity<>("entity_not_found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("entity_not_found", HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NoSuchElementException.class)

@@ -26,7 +26,6 @@ public class PayPalController {
     @GetMapping(value = "/pay/cancel")
     public ResponseEntity<String> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) throws PayPalRESTException {
             Payment payment = paymentService.executePayment(paymentId, payerId);
-            System.out.println(payment.toJSON());
             if (payment.getState().equals("approved")) {
                 return ResponseEntity.ok("Payment success");
             }
