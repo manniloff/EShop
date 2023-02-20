@@ -17,7 +17,6 @@
     <modules>
         <module>Core</module>
         <module>Discovery</module>
-        <module>Order</module>
         <module>Payment</module>
         <module>Shipment</module>
     </modules>
