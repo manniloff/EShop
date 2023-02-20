@@ -1,4 +1,4 @@
-package com.amdaris.mantoring.order;
+package com.amdaris.mentoring.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

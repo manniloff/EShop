@@ -5,6 +5,7 @@ import com.amdaris.mentoring.payment.dto.PaymentHistoryDto;
 import com.amdaris.mentoring.payment.exception.EntityExistsException;
 import com.amdaris.mentoring.payment.model.PaymentHistory;
 import com.amdaris.mentoring.payment.model.PaymentMethod;
+import com.amdaris.mentoring.payment.model.PaymentStatus;
 import com.amdaris.mentoring.payment.repository.PaymentRepository;
 import com.amdaris.mentoring.payment.service.PaymentHistoryService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class PaymentHistoryServiceImpl implements PaymentHistoryService {
         if (payment.isPresent()) {
             payment.get().setPaymentMethod(PaymentMethod.builder().title(paymentHistoryDto.getPaymentMethod()).build());
             payment.get().setPaymentDate(LocalDateTime.now().withNano(0));
-            payment.get().setStatus(PaymentHistory.PaymentStatus.valueOf(paymentHistoryDto.getStatus()));
+            payment.get().setStatus(PaymentStatus.valueOf(paymentHistoryDto.getStatus()));
             payment.get().setOrderId(paymentHistoryDto.getOrderId());
 
             paymentRepository.save(payment.get());

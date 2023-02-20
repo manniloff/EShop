@@ -1,4 +1,4 @@
-package com.amdaris.mantoring.shipment;
+package com.amdaris.mentoring.shipment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
