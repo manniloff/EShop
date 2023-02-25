@@ -19,6 +19,7 @@
         <module>Discovery</module>
         <module>Payment</module>
         <module>Shipment</module>
+        <module>common-module</module>
     </modules>
 
     <build>

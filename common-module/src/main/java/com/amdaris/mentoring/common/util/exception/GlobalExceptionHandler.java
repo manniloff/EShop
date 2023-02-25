@@ -1,6 +1,5 @@
-package com.amdaris.mentoring.payment.util.exception;
+package com.amdaris.mentoring.common.util.exception;
 
-import com.paypal.base.rest.PayPalRESTException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +29,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleMethodArgumentTypeMismatchException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return new ResponseEntity<>("argument_type_mismatch", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-    }
-
-    @ExceptionHandler(PayPalRESTException.class)
-    public ResponseEntity<?> handlePayPalRESTException(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return new ResponseEntity<>("paypal_rest_exception", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
