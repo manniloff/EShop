@@ -1,9 +1,9 @@
 package com.amdaris.mentoring.payment.method.paypal.service;
 
+import com.amdaris.mentoring.common.model.ProductDetails;
 import com.amdaris.mentoring.payment.method.OrderPaymentService;
 import com.amdaris.mentoring.payment.method.paypal.model.PaypalPaymentOrder;
 import com.amdaris.mentoring.payment.model.PaymentDetails;
-import com.amdaris.mentoring.payment.model.ProductDetails;
 import com.amdaris.mentoring.payment.service.PaymentService;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;

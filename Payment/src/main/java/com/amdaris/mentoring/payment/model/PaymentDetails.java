@@ -1,5 +1,6 @@
 package com.amdaris.mentoring.payment.model;
 
+import com.amdaris.mentoring.common.model.OrderDetails;
 import lombok.Data;
 import lombok.ToString;
 
