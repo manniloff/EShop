@@ -1,4 +1,4 @@
-package com.amdaris.mentoring.payment.model;
+package com.amdaris.mentoring.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

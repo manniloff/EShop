@@ -131,13 +131,24 @@
 					]
 				},
 				{
-					"name": "Payment",
+					"name": "PaymentHistory",
 					"item": [
 						{
 							"name": "Find All",
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [],
+								"url": {
+									"raw": "localhost:3360/payment/history",
+									"host": [
+										"localhost"
+									],
+									"port": "3360",
+									"path": [
+										"payment",
+										"history"
+									]
+								}
 							},
 							"response": []
 						},
@@ -147,13 +158,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:3360/payment/1",
+									"raw": "localhost:3360/payment/history/1",
 									"host": [
 										"localhost"
 									],
 									"port": "3360",
 									"path": [
 										"payment",
+										"history",
 										"1"
 									]
 								}
@@ -175,13 +187,14 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3360/payment",
+									"raw": "localhost:3360/payment/history",
 									"host": [
 										"localhost"
 									],
 									"port": "3360",
 									"path": [
-										"payment"
+										"payment",
+										"history"
 									]
 								}
 							},
@@ -202,13 +215,14 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3360/payment/1",
+									"raw": "localhost:3360/payment/history/1",
 									"host": [
 										"localhost"
 									],
 									"port": "3360",
 									"path": [
 										"payment",
+										"history",
 										"1"
 									]
 								}
@@ -221,13 +235,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "localhost:3360/payment/1",
+									"raw": "localhost:3360/payment/history/1",
 									"host": [
 										"localhost"
 									],
 									"port": "3360",
 									"path": [
 										"payment",
+										"history",
 										"1"
 									]
 								}
@@ -237,16 +252,50 @@
 					]
 				},
 				{
-					"name": "paypal",
+					"name": "Payment",
 					"item": [
 						{
-							"name": "Pay",
+							"name": "paypal",
+							"item": [
+								{
+									"name": "Pay",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"price\": 1.0,\r\n    \"currency\": \"USD\",\r\n    \"method\": \"paypal\",\r\n    \"intent\": \"sale\",\r\n    \"description\": \"Testing payment\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:3360/payment/paypal/pay",
+											"host": [
+												"localhost"
+											],
+											"port": "3360",
+											"path": [
+												"payment",
+												"paypal",
+												"pay"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Mock Kafka Message",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"price\": 1.0,\r\n    \"currency\": \"USD\",\r\n    \"method\": \"paypal\",\r\n    \"intent\": \"sale\",\r\n    \"description\": \"Testing payment\"\r\n}",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"productDetails\": [\r\n        {\r\n            \"title\": \"TShort\",\r\n            \"count\": 2,\r\n            \"price\": 20.0\r\n        },\r\n        {\r\n            \"title\": \"Jeans\",\r\n            \"count\": 1,\r\n            \"price\": 25.0\r\n        },\r\n        {\r\n            \"title\": \"Socks\",\r\n            \"count\": 3,\r\n            \"price\": 15.0\r\n        }\r\n    ],\r\n    \"shippingPrice\": 10.5\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -254,14 +303,81 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3360/payment/paypal/pay",
+									"raw": "localhost:3360/payment/",
 									"host": [
 										"localhost"
 									],
 									"port": "3360",
 									"path": [
 										"payment",
-										"paypal",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Pay Order",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"orderDetails\": {\r\n        \"id\": 1,\r\n        \"productDetails\": [\r\n            {\r\n                \"title\": \"TShort\",\r\n                \"count\": 2,\r\n                \"price\": 20.0\r\n            },\r\n            {\r\n                \"title\": \"Jeans\",\r\n                \"count\": 1,\r\n                \"price\": 25.0\r\n            },\r\n            {\r\n                \"title\": \"Socks\",\r\n                \"count\": 3,\r\n                \"price\": 15.0\r\n            }\r\n        ],\r\n        \"shippingPrice\": 10.5\r\n    },\r\n    \"currency\": \"USD\",\r\n    \"method\": \"paypal\",\r\n    \"details\": \"test payment\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3360/payment/pay",
+									"host": [
+										"localhost"
+									],
+									"port": "3360",
+									"path": [
+										"payment",
+										"pay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Core Microservice",
+			"item": [
+				{
+					"name": "Order",
+					"item": [
+						{
+							"name": "Send order to pay",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 1,\r\n    \"productDetails\": [\r\n        {\r\n            \"title\": \"TShort\",\r\n            \"count\": 2,\r\n            \"price\": 20.0\r\n        },\r\n        {\r\n            \"title\": \"Jeans\",\r\n            \"count\": 1,\r\n            \"price\": 25.0\r\n        },\r\n        {\r\n            \"title\": \"Socks\",\r\n            \"count\": 3,\r\n            \"price\": 15.0\r\n        }\r\n    ],\r\n    \"shippingPrice\": 10.5\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3340/order/send/to/pay",
+									"host": [
+										"localhost"
+									],
+									"port": "3340",
+									"path": [
+										"order",
+										"send",
+										"to",
 										"pay"
 									]
 								}
