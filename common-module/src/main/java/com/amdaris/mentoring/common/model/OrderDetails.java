@@ -1,4 +1,4 @@
-package com.amdaris.mentoring.payment.model;
+package com.amdaris.mentoring.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,3 +14,4 @@ public class OrderDetails {
     private List<ProductDetails> productDetails;
     private double shippingPrice;
 }
+

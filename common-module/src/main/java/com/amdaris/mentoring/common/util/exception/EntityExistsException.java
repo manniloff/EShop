@@ -1,4 +1,4 @@
-package com.amdaris.mentoring.payment.exception;
+package com.amdaris.mentoring.common.util.exception;
 
 public class EntityExistsException extends RuntimeException {
 

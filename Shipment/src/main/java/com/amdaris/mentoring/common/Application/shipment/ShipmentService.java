@@ -1,11 +1,11 @@
-package com.amdaris.mentoring.core;
+package com.amdaris.mentoring.common.Application.shipment;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CoreService {
+public class ShipmentService {
     public static void main(String[] args) {
-        SpringApplication.run(CoreService.class);
+        SpringApplication.run(ShipmentService.class);
     }
 }
