@@ -1,15 +1,16 @@
 package com.amdaris.mentoring.payment.service.impl;
 
-import com.amdaris.mentoring.common.util.exception.EntityExistsException;
+import com.amdaris.mentoring.payment.dto.PaymentMethodDto;
 import com.amdaris.mentoring.payment.dto.converter.PaymentMethodConverter;
 import com.amdaris.mentoring.payment.model.PaymentMethod;
-import com.amdaris.mentoring.payment.repository.PaymentMethodRepository;
 import com.amdaris.mentoring.payment.service.PaymentMethodService;
-import com.amdaris.mentoring.payment.dto.PaymentMethodDto;
+import com.amdaris.mentoring.payment.repository.PaymentMethodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,11 +28,13 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     }
 
     @Override
-    public Optional<PaymentMethodDto> findById(Short id) {
-        return Optional.ofNullable(PaymentMethodConverter.toPaymentMethodDto
-                .apply(paymentMethodRepository.findById(id)
-                        .get())
-        );
+    public PaymentMethodDto findById(Short id) {
+        Optional<PaymentMethod> paymentMethod = paymentMethodRepository.findById(id);
+        if (paymentMethod.isPresent()) {
+            return PaymentMethodConverter.toPaymentMethodDto
+                    .apply(paymentMethod.get());
+        }
+        throw new NoSuchElementException("Payment method with id - " + id + " doesn't exist!");
     }
 
     @Override
@@ -53,9 +56,8 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
             paymentMethodRepository.save(paymentMethod.get());
             return paymentMethod.get().getId();
-        } else {
-            throw new EntityExistsException("Payment method with id - " + id + " doesn't exist!");
         }
+        throw new NoSuchElementException("Payment method with id - " + id + " doesn't exist!");
     }
 
     @Override
@@ -67,5 +69,20 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
         } else {
             throw new EntityExistsException("Payment method with id - " + id + " doesn't exist!");
         }
+    }
+
+    @Override
+    public PaymentMethod findByTitle(String title) {
+        PaymentMethod paymentMethod = paymentMethodRepository.findByTitle(title);
+        if (Optional.ofNullable(paymentMethod).isPresent()) {
+            return paymentMethod;
+        } else {
+            throw new NoSuchElementException("Payment method with title - " + title + " doesn't exist!");
+        }
+    }
+
+    @Override
+    public void clear() {
+        paymentMethodRepository.deleteAll();
     }
 }
