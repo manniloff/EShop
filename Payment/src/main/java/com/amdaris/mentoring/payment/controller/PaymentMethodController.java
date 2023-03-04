@@ -41,7 +41,7 @@ public class PaymentMethodController {
     @PutMapping(value = "/{id}", produces = "application/json")
     ResponseEntity<?> update(@RequestBody PaymentMethodDto paymentMethodDto, @PathVariable short id) {
         log.info("Updating payment method with id - ", id);
-        Short paymentMethodId = paymentMethodService.update(paymentMethodDto, id);
+        short paymentMethodId = paymentMethodService.update(paymentMethodDto, id);
         if (paymentMethodId != 0) {
             return ResponseEntity.ok("Updated");
         }

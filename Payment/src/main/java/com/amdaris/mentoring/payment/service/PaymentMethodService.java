@@ -8,13 +8,13 @@ import java.util.List;
 public interface PaymentMethodService {
     List<PaymentMethodDto> findAll();
 
-    PaymentMethodDto findById(Short id);
+    PaymentMethodDto findById(short id);
 
-    Short save(PaymentMethodDto paymentMethodDto);
+    short save(PaymentMethodDto paymentMethodDto);
 
-    Short update(PaymentMethodDto paymentMethodDto, short id);
+    short update(PaymentMethodDto paymentMethodDto, short id);
 
-    Short deleteById(short id);
+    short deleteById(short id);
 
     PaymentMethod findByTitle(String title);
 

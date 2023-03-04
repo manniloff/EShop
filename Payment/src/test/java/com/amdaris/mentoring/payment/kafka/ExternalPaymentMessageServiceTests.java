@@ -35,7 +35,7 @@ class ExternalPaymentMessageServiceTests {
 
     @DisplayName("Test that invalid messages silently ignored")
     @Test
-    public void testThatInvalidMessagesSilentlyIgnored() throws JsonProcessingException {
+    public void sendKafkaMessage_dataIsInvalid_ignoreWrongMessages() throws JsonProcessingException {
         List<String> invalidPaymentMessages = new ArrayList<>();
 
         invalidPaymentMessages.add(null);
@@ -55,7 +55,7 @@ class ExternalPaymentMessageServiceTests {
 
     @DisplayName("Test that messages that were sent to kafka for payment topic were received")
     @Test
-    public void testThatKafkaPaymentListenerGetMessages() {
+    public void sendKafkaMessage_dataIsValid_sentAllData() {
         ProductDetails firstProductDetails = new ProductDetails();
         firstProductDetails.setTitle("Product1");
         firstProductDetails.setCount(2);

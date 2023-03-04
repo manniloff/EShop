@@ -26,7 +26,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that all payment methods were returned")
     @Test
-    public void testThatAllPaymentMethodsWereReturned() {
+    public void findAll_dataIsPresent_returnAllData() {
         Assertions.assertEquals(0, paymentMethodService.findAll().size());
 
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
@@ -46,7 +46,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that found by title payment method from database")
     @Test
-    public void testThatFindByTitlePaymentMethodWasGot(){
+    public void findByTitle_dataIsPresent_returnExistingData(){
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
         cardPaymentMethod.setTitle("card");
         cardPaymentMethod.setDetails("pay with visa/mastercard card");
@@ -61,7 +61,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that found by title payment method throws error when didn't found any item")
     @Test
-    public void testThatFoundByTitlePaymentMethodThrowsAnErrorWhenNotFoundAnyItem() {
+    public void findByTitle_dataNoPresent_returnErrorMessage() {
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class,
                 () -> paymentMethodService.findByTitle("card"));
 
@@ -70,7 +70,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that found by id payment method from database")
     @Test
-    public void testThatFindByIdPaymentMethodWasGot(){
+    public void findById_dataIsPresent_returnExistingData(){
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
         cardPaymentMethod.setTitle("card");
         cardPaymentMethod.setDetails("pay with visa/mastercard card");
@@ -86,7 +86,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that found by id payment method throws error when didn't found any item")
     @Test
-    public void testThatFoundByIdPaymentMethodThrowsAnErrorWhenNotFoundAnyItem() {
+    public void findById_dataNoPresent_returnErrorMessage() {
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class,
                 () -> paymentMethodService.findById((short) 1L));
 
@@ -95,7 +95,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that payment method was saved in database")
     @Test
-    public void testThatPaymentMethodWasSaved() {
+    public void create_dataNoPresent_returnSavedDataId() {
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
         cardPaymentMethod.setTitle("card");
         cardPaymentMethod.setDetails("pay with visa/mastercard card");
@@ -121,7 +121,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that save payment method throws error when item already exists")
     @Test
-    public void testThatSavePaymentMethodThrowsAnErrorWhenItemAlreadyExists() {
+    public void create_dataIsPresent_returnErrorMessage() {
         PaymentMethodDto firstPaypalPaymentMethod = new PaymentMethodDto();
         firstPaypalPaymentMethod.setTitle("paypal");
         firstPaypalPaymentMethod.setDetails("pay with paypal service");
@@ -140,7 +140,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that payment method was updated in database")
     @Test
-    public void testThatPaymentMethodWasUpdated() {
+    public void update_dataIsPresent_returnUpdatedDataId() {
         PaymentMethodDto paypalPaymentMethod = new PaymentMethodDto();
         paypalPaymentMethod.setTitle("paypal");
         paypalPaymentMethod.setDetails("pay with paypal service");
@@ -160,7 +160,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that update payment method throws error when didn't found any item")
     @Test
-    public void testThatUpdatePaymentMethodThrowsAnErrorWhenNotFoundAnyItem() {
+    public void update_dataNoPresent_returnErrorMessage() {
         PaymentMethodDto paypalPaymentMethod = new PaymentMethodDto();
         paypalPaymentMethod.setTitle("paypal");
         paypalPaymentMethod.setDetails("pay with paypal service");
@@ -173,7 +173,7 @@ public class PaymentMethodServiceTests {
 
     @DisplayName("Test that payment method was deleted from database")
     @Test
-    public void testThatPaymentMethodWasDeleted() {
+    public void deletedById_dataIsPresent_returnDeletedDataId() {
         PaymentMethodDto paypalPaymentMethod = new PaymentMethodDto();
         paypalPaymentMethod.setTitle("paypal");
         paypalPaymentMethod.setDetails("pay with paypal service");
@@ -181,14 +181,14 @@ public class PaymentMethodServiceTests {
         paymentMethodService.save(paypalPaymentMethod);
 
         Assertions.assertEquals(1, paymentMethodService.findAll().size());
-        paymentMethodService.deleteById((short) 1);
+        paymentMethodService.deleteById(paymentMethodService.findByTitle(paypalPaymentMethod.getTitle()).getId());
 
         Assertions.assertEquals(0, paymentMethodService.findAll().size());
     }
 
     @DisplayName("Test that delete payment method throws error when didn't found any item")
     @Test
-    public void testThatDeletePaymentMethodThrowsAnErrorWhenNotFoundAnyItem() {
+    public void deletedById_dataNoPresent_returnErrorMessage() {
         EntityExistsException exception = Assertions.assertThrows(EntityExistsException.class,
                 () -> paymentMethodService.deleteById((short) 1));
 
