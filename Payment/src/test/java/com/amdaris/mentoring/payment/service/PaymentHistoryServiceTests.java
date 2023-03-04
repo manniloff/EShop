@@ -26,7 +26,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that all payment history were returned")
     @Test
-    public void testThatAllPaymentHistoriesWereReturned() {
+    public void findAll_dataIsPresent_returnAllData() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -48,7 +48,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that found by order id payment history from database")
     @Test
-    public void testThatFindByOrderIdPaymentHistoryWasGot() {
+    public void findByOrderId_dataIsPresent_returnExistingData() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -66,7 +66,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that found by order id payment history throws error when didn't found any item")
     @Test
-    public void testThatFoundByOrderIdPaymentHistoryThrowsAnErrorWhenNotFoundAnyItem() {
+    public void findByOrderId_dataNoPresent_returnErrorMessage() {
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class,
                 () -> paymentHistoryService.findByOrderId(1L));
 
@@ -75,7 +75,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that found by id payment history from database")
     @Test
-    public void testThatFindByIdPaymentHistoryWasGot() {
+    public void findById_dataIsPresent_returnExistingData() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -93,7 +93,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that found by id payment history throws error when didn't found any item")
     @Test
-    public void testThatFoundByIdPaymentHistoryThrowsAnErrorWhenNotFoundAnyItem() {
+    public void findById_dataNoPresent_returnErrorMessage() {
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class,
                 () -> paymentHistoryService.findById(1L));
 
@@ -102,7 +102,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that payment history was saved in database")
     @Test
-    public void testThatPaymentHistoryWasSaved() {
+    public void create_dataNoPresent_returnSavedDataId() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -121,7 +121,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that save payment history throws error when item already exists")
     @Test
-    public void testThatSavePaymentHistoryThrowsAnErrorWhenItemAlreadyExists() {
+    public void create_dataIsPresent_returnErrorMessage() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -140,7 +140,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that payment history was updated in database")
     @Test
-    public void testThatPaymentHistoryWasUpdated() {
+    public void update_dataIsPresent_returnUpdatedDataId() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -164,7 +164,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that update payment history throws error when didn't found any item")
     @Test
-    public void testThatUpdatePaymentHistoryThrowsAnErrorWhenNotFoundAnyItem() {
+    public void update_dataNoPresent_returnErrorMessage() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -179,7 +179,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that payment history was deleted from database")
     @Test
-    public void testThatPaymentHistoryWasDeleted() {
+    public void deletedById_dataIsPresent_returnDeletedDataId() {
         PaymentHistoryDto firstPaymentHistory = new PaymentHistoryDto();
         firstPaymentHistory.setOrderId(1L);
         firstPaymentHistory.setStatus(PaymentStatus.pending.name());
@@ -199,7 +199,7 @@ public class PaymentHistoryServiceTests {
 
     @DisplayName("Test that delete payment history throws error when didn't found any item")
     @Test
-    public void testThatDeletePaymentHistoryThrowsAnErrorWhenNotFoundAnyItem() {
+    public void deletedById_dataNoPresent_returnErrorMessage() {
         EntityExistsException exception = Assertions.assertThrows(EntityExistsException.class,
                 () -> paymentHistoryService.deleteById(1L));
 

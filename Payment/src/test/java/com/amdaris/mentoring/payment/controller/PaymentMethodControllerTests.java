@@ -41,7 +41,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that endpoint return all payment methods")
     @Test
-    public void testThatFindAllEndpointReturnAllData() throws Exception {
+    public void findAll_dataIsPresent_returnAllData() throws Exception {
         paymentMethodRepository.deleteAll();
         PaymentMethod cardPaymentMethod = new PaymentMethod();
         cardPaymentMethod.setTitle("card");
@@ -64,17 +64,17 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that endpoint return payment method by id")
     @Test
-    public void testThatFindByIdEndpointReturnExistingData() throws Exception {
+    public void findById_dataIsPresent_returnExistingData() throws Exception {
         paymentMethodRepository.deleteAll();
         PaymentMethod cardPaymentMethod = new PaymentMethod();
-        cardPaymentMethod.setTitle("card");
-        cardPaymentMethod.setDetails("pay with visa/mastercard card");
+        cardPaymentMethod.setTitle("cash");
+        cardPaymentMethod.setDetails("pay with cash");
 
         paymentMethodRepository.save(cardPaymentMethod);
 
         String expected = objectMapper.writeValueAsString(PaymentMethodConverter.toPaymentMethodDto.apply(cardPaymentMethod));
 
-        short paymentMethodId = paymentMethodRepository.findAll().stream().filter(paymentMethod -> paymentMethod.getTitle().equals("card")).findFirst().get().getId();
+        short paymentMethodId = paymentMethodRepository.findAll().stream().filter(paymentMethod -> paymentMethod.getTitle().equals("cash")).findFirst().get().getId();
 
         mvc.perform(MockMvcRequestBuilders.get("/payment/method/" + paymentMethodId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -85,7 +85,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that endpoint throw error message when try to get not exists payment method by id")
     @Test
-    public void testThatFindByIdEndpointReturnExceptionWhenTryToGetNoExistsData() throws Exception {
+    public void findById_dataNoPresent_returnErrorMessage() throws Exception {
         paymentMethodRepository.deleteAll();
 
         mvc.perform(MockMvcRequestBuilders.get("/payment/method/1")
@@ -97,7 +97,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that endpoint create new payment method")
     @Test
-    public void testThatCreateEndpointSaveDataToDatabase() throws Exception {
+    public void create_dataNoPresent_returnSavedDataId() throws Exception {
         paymentMethodRepository.deleteAll();
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
         cardPaymentMethod.setTitle("paypal");
@@ -113,7 +113,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that exception throws when try to create payment method which already exists")
     @Test
-    public void testThatExceptionThrowsWhenTryToCreateExistPaymentMethod() throws Exception {
+    public void create_dataIsPresent_returnErrorMessage() throws Exception {
         paymentMethodRepository.deleteAll();
         PaymentMethod cardPaymentMethod = new PaymentMethod();
         cardPaymentMethod.setTitle("card");
@@ -133,7 +133,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that was updated payment method")
     @Test
-    public void testThatWasUpdatedExistPaymentMethod() throws Exception {
+    public void update_dataIsPresent_returnUpdatedDataId() throws Exception {
         paymentMethodRepository.deleteAll();
         PaymentMethod cardPaymentMethod = new PaymentMethod();
         cardPaymentMethod.setTitle("card");
@@ -168,7 +168,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that exception throws when try to update payment method which not exist")
     @Test
-    public void testThatExceptionThrowsWhenTryToUpdateNotExistPaymentMethod() throws Exception {
+    public void update_dataNoPresent_returnErrorMessage() throws Exception {
         paymentMethodRepository.deleteAll();
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
         cardPaymentMethod.setTitle("card");
@@ -186,7 +186,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that was deleted payment method by id")
     @Test
-    public void testThatWasDeletedExistPaymentMethodById() throws Exception {
+    public void deletedById_dataIsPresent_returnDeletedDataId() throws Exception {
         paymentMethodRepository.deleteAll();
         PaymentMethod cardPaymentMethod = new PaymentMethod();
         cardPaymentMethod.setTitle("card");
@@ -212,7 +212,7 @@ public class PaymentMethodControllerTests {
 
     @DisplayName("Test that exception throws when try to delete payment method which not exist")
     @Test
-    public void testThatExceptionThrowsWhenTryToDeleteNotExistPaymentMethod() throws Exception {
+    public void deletedById_dataNoPresent_returnErrorMessage() throws Exception {
         paymentMethodRepository.deleteAll();
 
         mvc.perform(MockMvcRequestBuilders.delete("/payment/method/1")

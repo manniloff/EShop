@@ -28,7 +28,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     }
 
     @Override
-    public PaymentMethodDto findById(Short id) {
+    public PaymentMethodDto findById(short id) {
         Optional<PaymentMethod> paymentMethod = paymentMethodRepository.findById(id);
         if (paymentMethod.isPresent()) {
             return PaymentMethodConverter.toPaymentMethodDto
@@ -38,7 +38,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     }
 
     @Override
-    public Short save(PaymentMethodDto paymentMethodDto) {
+    public short save(PaymentMethodDto paymentMethodDto) {
         boolean isPresent = paymentMethodRepository.existsByTitle(paymentMethodDto.getTitle());
         if (isPresent) {
             throw new EntityExistsException("Payment method with title - " + paymentMethodDto.getTitle() + " exists!");
@@ -47,7 +47,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     }
 
     @Override
-    public Short update(PaymentMethodDto paymentMethodDto, short id) {
+    public short update(PaymentMethodDto paymentMethodDto, short id) {
         Optional<PaymentMethod> paymentMethod = paymentMethodRepository.findById(id);
 
         if (paymentMethod.isPresent()) {
@@ -61,7 +61,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     }
 
     @Override
-    public Short deleteById(short id) {
+    public short deleteById(short id) {
         Optional<PaymentMethod> paymentMethod = paymentMethodRepository.findById(id);
         if (paymentMethod.isPresent()) {
             paymentMethodRepository.deleteById(paymentMethod.get().getId());

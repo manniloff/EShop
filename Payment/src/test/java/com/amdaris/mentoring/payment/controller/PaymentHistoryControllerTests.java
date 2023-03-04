@@ -51,7 +51,7 @@ public class PaymentHistoryControllerTests {
 
     @DisplayName("Test that endpoint return all payment methods")
     @Test
-    public void testThatFindAllEndpointReturnAllData() throws Exception {
+    public void findAll_dataIsPresent_returnAllData() throws Exception {
         paymentHistoryRepository.deleteAll();
 
         PaymentMethod cardPaymentMethod = new PaymentMethod();
@@ -77,7 +77,7 @@ public class PaymentHistoryControllerTests {
 
     @DisplayName("Test that endpoint return payment history by id")
     @Test
-    public void testThatFindByIdEndpointReturnExistingData() throws Exception {
+    public void findById_dataIsPresent_returnExistingData() throws Exception {
         paymentHistoryRepository.deleteAll();
 
         PaymentMethod cardPaymentMethod = new PaymentMethod();
@@ -110,7 +110,7 @@ public class PaymentHistoryControllerTests {
 
     @DisplayName("Test that endpoint throw error message when try to get not exists payment history by id")
     @Test
-    public void testThatFindByIdEndpointReturnExceptionWhenTryToGetNoExistsData() throws Exception {
+    public void findById_dataNoPresent_returnErrorMessage() throws Exception {
         paymentHistoryRepository.deleteAll();
 
         mvc.perform(MockMvcRequestBuilders.get("/payment/history/1")
@@ -122,7 +122,7 @@ public class PaymentHistoryControllerTests {
 
     @DisplayName("Test that was deleted payment history by id")
     @Test
-    public void testThatWasDeletedExistPaymentHistoryById() throws Exception {
+    public void deletedById_dataIsPresent_returnDeletedDataId() throws Exception {
         paymentHistoryRepository.deleteAll();
         PaymentMethod cardPaymentMethod = new PaymentMethod();
         cardPaymentMethod.setTitle("card");
@@ -154,7 +154,7 @@ public class PaymentHistoryControllerTests {
 
     @DisplayName("Test that exception throws when try to delete payment history which not exist")
     @Test
-    public void testThatExceptionThrowsWhenTryToDeleteNotExistPaymentHistory() throws Exception {
+    public void deletedById_dataNoPresent_returnErrorMessage() throws Exception {
         paymentHistoryRepository.deleteAll();
 
         mvc.perform(MockMvcRequestBuilders.delete("/payment/history/1")
