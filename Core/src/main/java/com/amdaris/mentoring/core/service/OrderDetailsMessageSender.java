@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class OrderDetailsMessageSender {
+public class OrderDetailsMessageSender implements KafkaMessageSender<OrderDetails>{
     private final KafkaTemplate<String, OrderDetails> kafkaTemplate;
     @Value("${externalmessage.topics.payment}")
     private String topic;

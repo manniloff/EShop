@@ -33,6 +33,6 @@ public class PaymentHistoryController {
     ResponseEntity<?> deleteById(@PathVariable long id) {
         log.info("Deleting payment by id");
         paymentHistoryService.deleteById(id);
-        return ResponseEntity.ok("Payment with id - " + id + ", was deleted");
+        return ResponseEntity.ok("Payment history with id - " + id + ", was deleted");
     }
 }
