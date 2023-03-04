@@ -1,4 +1,4 @@
-package com.amdaris.mentoring.common.util.exception;
+package com.amdaris.mentoring.payment.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import javax.lang.model.UnknownEntityException;
+import javax.persistence.EntityExistsException;
 import java.util.NoSuchElementException;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UnknownEntityException.class)
+    @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<?> handleEntityNotFoundException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return new ResponseEntity<>("entity_not_found", HttpStatus.CONFLICT);
