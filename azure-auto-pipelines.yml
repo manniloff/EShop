@@ -12,7 +12,7 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-- stage: Build custom maven dependency
+- stage: Build_custom_maven_dependency
   jobs:
     - job: BuildAndPackage
       steps:
@@ -27,7 +27,7 @@ stages:
           testResultsFiles: '**/surefire-reports/TEST-*.xml'
           goals: 'package'
 
-- stage: Build core package
+- stage: Build_core_package
   jobs:
       - job: BuildAndPackage
         steps:
