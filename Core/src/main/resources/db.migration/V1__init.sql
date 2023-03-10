@@ -24,8 +24,8 @@ CREATE TABLE product
 CREATE TABLE role
 (
     id   SMALLINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    role VARCHAR(50),
-    CONSTRAINT role_check CHECK (role IN ('ADMIN', 'CUSTOMER', 'MODERATOR'))
+    role_type VARCHAR(50),
+    CONSTRAINT role_check CHECK (role_type IN ('ADMIN', 'CUSTOMER', 'MODERATOR'))
 );
 
 CREATE TABLE address
@@ -35,19 +35,22 @@ CREATE TABLE address
     city    VARCHAR(255),
     street  VARCHAR(255),
     block   VARCHAR(50),
-    house   VARCHAR(50)
+    house   VARCHAR(50),
+    user_id BIGINT
 );
 
 CREATE TABLE user
 (
-    phone_number BIGINT PRIMARY KEY NOT NULL,
+    id BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     address_id   BIGINT,
     email        VARCHAR(255),
     first_name   VARCHAR(255),
     last_name    VARCHAR(255),
+    phone_number VARCHAR(12),
     role_id      SMALLINT,
     password     VARCHAR(50),
     birthday     TIMESTAMP(0),
+    full_name VARCHAR(200) GENERATED ALWAYS AS (CONCAT(first_name,' ',last_name)) VIRTUAL,
     CONSTRAINT fk_address FOREIGN KEY (address_id) REFERENCES address (id),
     CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role (id)
 );
@@ -58,7 +61,7 @@ CREATE TABLE bucket
     user_id  BIGINT,
     item     VARCHAR(255),
     discount SMALLINT,
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user (phone_number)
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
 CREATE TABLE order_info
