@@ -9,14 +9,29 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: './Payment/pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+stages:
+- stage: Build custom maven dependency
+  steps:
+    - task: Maven@3
+      inputs:
+        mavenPomFile: './common-module/pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
+
+- stage: Build core package
+  steps:
+    - task: Maven@3
+      inputs:
+      mavenPomFile: './Payment/pom.xml'
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.11'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'package'
