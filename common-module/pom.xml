@@ -91,7 +91,7 @@
         </repository>
     </repositories>
 
-    <dependencyManagement>
+    <distributionManagement>
         <repository>
             <id>common-lib</id>
             <url>https://pkgs.dev.azure.com/manniloff/EShop/_packaging/common-lib/maven/v1</url>
@@ -102,5 +102,5 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-    </dependencyManagement>
+    </distributionManagement>
 </project>
