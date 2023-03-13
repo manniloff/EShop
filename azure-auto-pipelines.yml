@@ -1,0 +1,88 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build_custom_maven_dependency
+  jobs:
+    - job: BuildAndPackage
+      steps:
+      - task: Maven@3
+        inputs:
+          mavenPomFile: './common-module/pom.xml'
+          mavenOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.11'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/surefire-reports/TEST-*.xml'
+          goals: 'package'
+
+- stage: Build_discavery_service
+  jobs:
+      - job: BuildAndPackage
+        steps:
+        - task: Maven@3
+          inputs:
+            mavenPomFile: './Discovery/pom.xml'
+            mavenOptions: '-Xmx3072m'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.11'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            goals: 'package'
+
+- stage: Build_core_service
+  jobs:
+      - job: BuildAndPackage
+        steps:
+        - task: Maven@3
+          inputs:
+            mavenPomFile: './Core/pom.xml'
+            mavenOptions: '-Xmx3072m'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.11'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            goals: 'package'
+
+- stage: Build_payment_service
+  jobs:
+      - job: BuildAndPackage
+        steps:
+        - task: Maven@3
+          inputs:
+            mavenPomFile: './Payment/pom.xml'
+            mavenOptions: '-Xmx3072m'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.11'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            goals: 'package'
+
+- stage: Build_shipment_service
+  jobs:
+      - job: BuildAndPackage
+        steps:
+        - task: Maven@3
+          inputs:
+            mavenPomFile: './Shipment/pom.xml'
+            mavenOptions: '-Xmx3072m'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.11'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            goals: 'package'
