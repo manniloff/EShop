@@ -13,6 +13,7 @@ import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class PaymentMethodServiceTests {
@@ -27,29 +28,30 @@ public class PaymentMethodServiceTests {
     @DisplayName("Test that all payment methods were returned")
     @Test
     public void findAll_dataIsPresent_returnAllData() {
-        Assertions.assertEquals(0, paymentMethodService.findAll().size());
-
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
-        cardPaymentMethod.setTitle("card");
+        cardPaymentMethod.setTitle("card1");
         cardPaymentMethod.setDetails("pay with visa/mastercard card");
 
         paymentMethodService.save(cardPaymentMethod);
 
         PaymentMethodDto paypalPaymentMethod = new PaymentMethodDto();
-        paypalPaymentMethod.setTitle("paypal");
+        paypalPaymentMethod.setTitle("paypal1");
         paypalPaymentMethod.setDetails("pay with paypal service");
 
         paymentMethodService.save(paypalPaymentMethod);
 
-        Assertions.assertEquals(2, paymentMethodService.findAll().size());
+        Assertions.assertEquals(2L, paymentMethodService.findAll()
+                .stream()
+                .filter(paymentMethod -> paymentMethod.getTitle().equals("card1") || paymentMethod.getTitle().equals("paypal1"))
+                .count());
     }
 
     @DisplayName("Test that found by title payment method from database")
     @Test
-    public void findByTitle_dataIsPresent_returnExistingData(){
+    public void findByTitle_dataIsPresent_returnExistingData() {
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
-        cardPaymentMethod.setTitle("card");
-        cardPaymentMethod.setDetails("pay with visa/mastercard card");
+        cardPaymentMethod.setTitle("noNamePay");
+        cardPaymentMethod.setDetails("pay with noNamePay");
 
         paymentMethodService.save(cardPaymentMethod);
 
@@ -63,21 +65,21 @@ public class PaymentMethodServiceTests {
     @Test
     public void findByTitle_dataNoPresent_returnErrorMessage() {
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class,
-                () -> paymentMethodService.findByTitle("card"));
+                () -> paymentMethodService.findByTitle("errorTitle"));
 
-        Assertions.assertEquals("Payment method with title - card doesn't exist!", exception.getMessage());
+        Assertions.assertEquals("Payment method with title - errorTitle doesn't exist!", exception.getMessage());
     }
 
     @DisplayName("Test that found by id payment method from database")
     @Test
-    public void findById_dataIsPresent_returnExistingData(){
+    public void findById_dataIsPresent_returnExistingData() {
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
-        cardPaymentMethod.setTitle("card");
-        cardPaymentMethod.setDetails("pay with visa/mastercard card");
+        cardPaymentMethod.setTitle("binance");
+        cardPaymentMethod.setDetails("pay with binance platform");
 
         paymentMethodService.save(cardPaymentMethod);
 
-        PaymentMethod paymentMethod = paymentMethodService.findByTitle("card");
+        PaymentMethod paymentMethod = paymentMethodService.findByTitle("binance");
         PaymentMethodDto foundByTitle = paymentMethodService.findById((paymentMethod.getId()));
 
         Assertions.assertEquals(cardPaymentMethod.getTitle(), foundByTitle.getTitle());
@@ -97,26 +99,32 @@ public class PaymentMethodServiceTests {
     @Test
     public void create_dataNoPresent_returnSavedDataId() {
         PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
-        cardPaymentMethod.setTitle("card");
-        cardPaymentMethod.setDetails("pay with visa/mastercard card");
+        cardPaymentMethod.setTitle("cash");
+        cardPaymentMethod.setDetails("pay with cash");
 
         paymentMethodService.save(cardPaymentMethod);
 
         List<PaymentMethodDto> paymentMethods = paymentMethodService.findAll();
 
-        Assertions.assertEquals(1, paymentMethods.size());
-        Assertions.assertEquals("card", paymentMethods.get(0).getTitle());
+        Assertions.assertEquals("cash",paymentMethods.stream()
+                .filter(method -> method.getTitle().equals("cash"))
+                .findFirst()
+                .get()
+                .getTitle());
 
         PaymentMethodDto paypalPaymentMethod = new PaymentMethodDto();
-        paypalPaymentMethod.setTitle("paypal");
-        paypalPaymentMethod.setDetails("pay with paypal service");
+        paypalPaymentMethod.setTitle("yandexpay");
+        paypalPaymentMethod.setDetails("pay with yandexpay service");
 
         paymentMethodService.save(paypalPaymentMethod);
 
         paymentMethods = paymentMethodService.findAll();
 
-        Assertions.assertEquals(2, paymentMethods.size());
-        Assertions.assertEquals("paypal", paymentMethods.get(1).getTitle());
+        Assertions.assertEquals("yandexpay", paymentMethods.stream()
+                .filter(method -> method.getTitle().equals("yandexpay"))
+                .findFirst()
+                .get()
+                .getTitle());
     }
 
     @DisplayName("Test that save payment method throws error when item already exists")
@@ -166,7 +174,7 @@ public class PaymentMethodServiceTests {
         paypalPaymentMethod.setDetails("pay with paypal service");
 
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class,
-                () -> paymentMethodService.update(paypalPaymentMethod,(short)1));
+                () -> paymentMethodService.update(paypalPaymentMethod, (short) 1));
 
         Assertions.assertEquals("Payment method with id - 1 doesn't exist!", exception.getMessage());
     }
@@ -180,10 +188,11 @@ public class PaymentMethodServiceTests {
 
         paymentMethodService.save(paypalPaymentMethod);
 
-        Assertions.assertEquals(1, paymentMethodService.findAll().size());
-        paymentMethodService.deleteById(paymentMethodService.findByTitle(paypalPaymentMethod.getTitle()).getId());
+        short paymentMethodId = paymentMethodService.findByTitle(paypalPaymentMethod.getTitle()).getId();
 
-        Assertions.assertEquals(0, paymentMethodService.findAll().size());
+        paymentMethodService.deleteById(paymentMethodId);
+
+        Assertions.assertFalse(paymentMethodService.existsByTitle(paypalPaymentMethod.getTitle()));
     }
 
     @DisplayName("Test that delete payment method throws error when didn't found any item")

@@ -82,6 +82,11 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     }
 
     @Override
+    public boolean existsByTitle(String title) {
+        return paymentMethodRepository.existsByTitle(title);
+    }
+
+    @Override
     public void clear() {
         paymentMethodRepository.deleteAll();
     }
