@@ -1,7 +1,7 @@
 package com.amdaris.mentoring.core.controller;
 
 import com.amdaris.mentoring.common.model.OrderDetails;
-import com.amdaris.mentoring.core.service.OrderDetailsMessageSender;
+import com.amdaris.mentoring.core.service.KafkaMessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/order")
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderDetailsMessageSender orderDetailsMessageSender;
+    private final KafkaMessageSender orderDetailsMessageSender;
 
     @PostMapping(value = "/send/to/pay")
     public ResponseEntity<?> sendOrderToPay(@RequestBody OrderDetails orderDetails) {
