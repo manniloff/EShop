@@ -18,5 +18,7 @@ public interface PaymentMethodService {
 
     PaymentMethod findByTitle(String title);
 
+    boolean existsByTitle(String title);
+
     void clear();
 }
