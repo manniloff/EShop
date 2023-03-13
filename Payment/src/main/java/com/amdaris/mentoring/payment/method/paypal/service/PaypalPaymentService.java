@@ -61,7 +61,7 @@ public class PaypalPaymentService implements OrderPaymentService<Payment, Paypal
     public Payment createPayment(PaypalPaymentOrder order) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(order.getCurrency());
-        var total = new BigDecimal(order.getTotal()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        double total = new BigDecimal(order.getTotal()).setScale(2, RoundingMode.HALF_UP).doubleValue();
         amount.setTotal(String.format("%.2f", total));
 
         Transaction transaction = new Transaction();

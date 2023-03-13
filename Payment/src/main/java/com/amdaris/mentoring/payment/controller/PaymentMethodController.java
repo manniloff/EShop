@@ -49,7 +49,7 @@ public class PaymentMethodController {
     }
 
     @DeleteMapping(value = {"/{id}"}, produces = "application/json")
-    ResponseEntity<?> deleteById(@PathVariable byte id) {
+    ResponseEntity<?> deleteById(@PathVariable short id) {
         log.info("Deleting payment method by id");
         paymentMethodService.deleteById(id);
         return ResponseEntity.ok("Payment method with id - " + id + ", was deleted");
