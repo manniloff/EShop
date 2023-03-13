@@ -71,6 +71,13 @@ stages:
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
+        - task: PublishCodeCoverageResults@1
+          displayName: Publish Code Coverage Results
+          inputs:
+            codeCoverageTool: 'cobertura'
+            summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/TestResults/$(_BuildConfig)/Reports/Summary/Cobertura.xml'
+          continueOnError: true
+          condition: always()
 
 - stage: Build_shipment_service
   jobs:
@@ -86,24 +93,6 @@ stages:
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
-
-- stage: Test_Covarage
-  jobs:
-      - job: TestCovarage
-        steps:
-          - task: reportgenerator@4
-            displayName: "Merge code coverage reports"
-            inputs:
-              reports: "**/coverage.cobertura.xml"
-              targetdir: "$(Build.ArtifactStagingDirectory)/coverlet"
-              reporttypes: "Cobertura"
-              verbosity: "Verbose"
-
-          - task: PublishCodeCoverageResults@1
-            displayName: "Publish code coverage results"
-            inputs:
-              codeCoverageTool: Cobertura
-              summaryFileLocation: "$(Build.ArtifactStagingDirectory)/coverlet/Cobertura.xml"
 
 #        - task: PublishCodeCoverageResults@1
 #          displayName: Publish Code Coverage Results
