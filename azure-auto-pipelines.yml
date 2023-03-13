@@ -71,7 +71,6 @@ stages:
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
-
         - task: reportgenerator@4
           displayName: "Merge code coverage reports"
           inputs:
@@ -79,7 +78,6 @@ stages:
             targetdir: "$(Build.ArtifactStagingDirectory)/coverlet"
             reporttypes: "Cobertura"
             verbosity: "Verbose"
-
         - task: PublishCodeCoverageResults@1
           displayName: "Publish code coverage results"
           inputs:
