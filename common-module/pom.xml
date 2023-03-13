@@ -77,4 +77,30 @@
             <version>5.9.2</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>common-lib</id>
+            <url>https://pkgs.dev.azure.com/manniloff/EShop/_packaging/common-lib/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>common-lib</id>
+            <url>https://pkgs.dev.azure.com/manniloff/EShop/_packaging/common-lib/maven/v1</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </distributionManagement>
 </project>
