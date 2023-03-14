@@ -10,7 +10,6 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <spring-cloud.version>2020.0.2</spring-cloud.version>
-        <!--start-class>test.client.system.Application</start-class-->
     </properties>
 
 
@@ -49,6 +48,11 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>7.10.0</version>
         </dependency>
 
         <!-- Amdaris common module -->
