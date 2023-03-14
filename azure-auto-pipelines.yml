@@ -94,10 +94,9 @@ stages:
      - task: PublishCodeCoverageResults@1
        displayName: Publish Code Coverage Results
        inputs:
-         codeCoverageTool: 'cobertura'
-         summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/TestResults/$(_BuildConfig)/Reports/Summary/Cobertura.xml'
-       continueOnError: true
-       condition: always()
+         codeCoverageTool: 'Cobertura'
+         summaryFileLocation: '**/*coverage.cobertura.xml'
+
 #        - task: PublishCodeCoverageResults@1
 #          displayName: Publish Code Coverage Results
 #          inputs:
