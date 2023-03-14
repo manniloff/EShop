@@ -74,11 +74,16 @@ stages:
             arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
             goals: 'package'
 
-        - task: PublishCodeCoverageResults@1
-          displayName: Publish Code Coverage Results
+        - task: PublishTestResults@2
+          displayName: "Publish test results"
           inputs:
-            codeCoverageTool: 'Cobertura'
-            summaryFileLocation: '**/*coverage.cobertura.xml'
+            testResultsFormat: "JUnit"
+            mergeTestResults: true # Optional
+        - task: PublishCodeCoverageResults@1
+          displayName: "Publish publish code coverage"
+          inputs:
+            summaryFileLocation: $(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml
+            pathToSources: $(System.DefaultWorkingDirectory)/src/main/java/
 
 - stage: Build_shipment_service
   jobs:
