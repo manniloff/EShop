@@ -1,0 +1,34 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+stages:
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: CodeCoverage
+        displayName: Code Coverage
+        pool:
+          vmImage: "ubuntu-16.04"
+        steps:
+        - task: Maven@3
+          displayName: "Maven Test"
+          inputs:
+            mavenPomFile: "./Payment/pom.xml"
+            goals: "test"
+
+        - task: PublishTestResults@2
+          displayName: "Publish test results"
+          inputs:
+            testResultsFormat: "JUnit"
+            mergeTestResults: true # Optional
+        - task: PublishCodeCoverageResults@1
+          displayName: "Publish publish code coverage"
+          inputs:
+            summaryFileLocation: $(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml
+            pathToSources: $(System.DefaultWorkingDirectory)/src/main/java/
+
