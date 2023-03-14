@@ -74,17 +74,6 @@ stages:
             arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
             goals: 'package'
 
-        - task: PublishTestResults@2
-          displayName: "Publish test results"
-          inputs:
-            testResultsFormat: "JUnit"
-            mergeTestResults: true # Optional
-        - task: PublishCodeCoverageResults@1
-          displayName: "Publish publish code coverage"
-          inputs:
-            summaryFileLocation: $(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml
-            pathToSources: $(System.DefaultWorkingDirectory)/src/main/java/
-
 - stage: Build_shipment_service
   jobs:
       - job: BuildAndPackage
@@ -100,11 +89,18 @@ stages:
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
 
-#        - task: PublishCodeCoverageResults@1
-#          displayName: Publish Code Coverage Results
-#          inputs:
-#            codeCoverageTool: 'cobertura'
-#            summaryFileLocation: '$(Build.SourcesDirectory)/artifacts/TestResults/$(_BuildConfig)/Reports/Summary/Cobertura.xml'
-#          continueOnError: true
-#          condition: always()
+- stage: Test_Covarage
+  jobs:
+      - job: BuildAndPackage
+        steps:
+        - task: PublishTestResults@2
+          displayName: "Publish test results"
+          inputs:
+            testResultsFormat: "JUnit"
+            mergeTestResults: true # Optional
+        - task: PublishCodeCoverageResults@1
+          displayName: "Publish publish code coverage"
+          inputs:
+            summaryFileLocation: $(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml
+            pathToSources: $(System.DefaultWorkingDirectory)/src/main/java/
 
