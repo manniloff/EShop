@@ -74,10 +74,6 @@ stages:
             arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
             goals: 'package'
 
-        - script: |
-            reportgenerator -reports:$(Build.SourcesDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:HtmlInline_AzurePipelines
-          displayName: 'Create code coverage report'
-
         - task: PublishCodeCoverageResults@1
           displayName: Publish Code Coverage Results
           inputs:
