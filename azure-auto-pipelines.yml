@@ -70,7 +70,14 @@ stages:
             jdkArchitectureOption: 'x64'
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            publishTestResults: true
+            arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
             goals: 'package'
+        - task: PublishCodeCoverageResults@1
+          displayName: Publish Code Coverage Results
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: '**/*coverage.cobertura.xml'
 
 - stage: Build_shipment_service
   jobs:
@@ -86,16 +93,6 @@ stages:
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
-
-- stage: test
-  jobs:
-   - job: test
-     steps:
-     - task: PublishCodeCoverageResults@1
-       displayName: Publish Code Coverage Results
-       inputs:
-         codeCoverageTool: 'Cobertura'
-         summaryFileLocation: '**/*coverage.cobertura.xml'
 
 #        - task: PublishCodeCoverageResults@1
 #          displayName: Publish Code Coverage Results
