@@ -56,6 +56,16 @@ stages:
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
+        - task: PublishTestResults@2
+          displayName: "Publish test results"
+          inputs:
+            testResultsFormat: "JUnit"
+            mergeTestResults: true # Optional
+        - task: PublishCodeCoverageResults@1
+          displayName: "Publish publish code coverage"
+          inputs:
+            summaryFileLocation: $(System.DefaultWorkingDirectory)/Core/target/site/jacoco/jacoco.xml
+            pathToSources: $(System.DefaultWorkingDirectory)/Core/src/main/java/
 
 - stage: Build_payment_service
   jobs:
