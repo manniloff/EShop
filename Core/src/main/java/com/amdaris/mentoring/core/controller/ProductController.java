@@ -37,21 +37,14 @@ public class ProductController {
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody Product product) {
         log.info("Try to save new product with title - {}", product.getTitle());
-        long productId = productService.save(product);
-        if (productId != 0) {
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        productService.save(product);
+        return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", produces = "application/json")
+    @PatchMapping(value = "/{id}", produces = "application/json")
     ResponseEntity<?> update(@RequestBody Product product, @PathVariable long id) {
         log.info("Try to update product with title - {}", product.getTitle());
-        long productId = productService.update(product, id);
-        if (productId != 0) {
-            return new ResponseEntity<>("Updated", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Not Modified", HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(productService.update(product, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")
