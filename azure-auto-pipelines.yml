@@ -70,9 +70,17 @@ stages:
             jdkArchitectureOption: 'x64'
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
-            publishTestResults: true
-            arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
             goals: 'package'
+        - task: PublishTestResults@2
+          displayName: "Publish test results"
+          inputs:
+            testResultsFormat: "JUnit"
+            mergeTestResults: true # Optional
+        - task: PublishCodeCoverageResults@1
+          displayName: "Publish publish code coverage"
+          inputs:
+            summaryFileLocation: $(System.DefaultWorkingDirectory)/Payment/target/site/jacoco/jacoco.xml
+            pathToSources: $(System.DefaultWorkingDirectory)/Payment/src/main/java/
 
 - stage: Build_shipment_service
   jobs:
@@ -88,19 +96,4 @@ stages:
             publishJUnitResults: true
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
-
-- stage: Test_Covarage
-  jobs:
-      - job: BuildAndPackage
-        steps:
-        - task: PublishTestResults@2
-          displayName: "Publish test results"
-          inputs:
-            testResultsFormat: "JUnit"
-            mergeTestResults: true # Optional
-        - task: PublishCodeCoverageResults@1
-          displayName: "Publish publish code coverage"
-          inputs:
-            summaryFileLocation: $(System.DefaultWorkingDirectory)/target/site/jacoco/jacoco.xml
-            pathToSources: $(System.DefaultWorkingDirectory)/src/main/java/
 
