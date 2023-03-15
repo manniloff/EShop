@@ -126,18 +126,12 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <destFile>${project.build.directory}/payment-junit-jacoco.xml</destFile>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>jacoco-report</id>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <dataFile>${project.build.directory}/payment-junit-jacoco.xml</dataFile>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
