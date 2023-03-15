@@ -12,7 +12,7 @@ public interface CategoryService {
 
     Short save(Category category);
 
-    Short update(Category category, short id);
+    Category update(Category category, short id);
 
     Short deleteById(short id);
 

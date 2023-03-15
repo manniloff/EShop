@@ -162,12 +162,12 @@ public class ProductControllerTests {
         Product product = productRepository.save(vehicleProduct);
 
         vehicleProduct.setTitle("Vehicle updated");
-        mvc.perform(MockMvcRequestBuilders.put("/product/" + product.getId())
+        mvc.perform(MockMvcRequestBuilders.patch("/product/" + product.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vehicleProduct)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Updated", result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(vehicleProduct), result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update product which not exist")
@@ -182,7 +182,7 @@ public class ProductControllerTests {
         vehicleProduct.setSale((short)0);
         vehicleProduct.setCategories(Set.of());
 
-        mvc.perform(MockMvcRequestBuilders.put("/product/1")
+        mvc.perform(MockMvcRequestBuilders.patch("/product/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vehicleProduct)))
                 .andExpect(status().isNotFound())

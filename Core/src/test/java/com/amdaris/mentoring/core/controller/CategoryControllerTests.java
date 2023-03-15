@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -134,12 +135,12 @@ public class CategoryControllerTests {
         Category category = categoryRepository.save(homeCategory);
 
         homeCategory.setTitle("Home updated");
-        mvc.perform(MockMvcRequestBuilders.put("/category/" + category.getId())
+        mvc.perform(MockMvcRequestBuilders.patch("/category/" + category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(homeCategory)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Updated", result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(homeCategory), result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update category which not exist")
@@ -150,7 +151,7 @@ public class CategoryControllerTests {
         Category vehicleCategory = new Category();
         vehicleCategory.setTitle("Vehicle");
 
-        mvc.perform(MockMvcRequestBuilders.put("/category/1")
+        mvc.perform(MockMvcRequestBuilders.patch("/category/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vehicleCategory)))
                 .andExpect(status().isNotFound())

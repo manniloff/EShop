@@ -46,11 +46,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Short update(Category category, short id) {
+    public Category update(Category category, short id) {
         Optional<Category> byId = categoryRepository.findById(id);
 
         if (byId.isPresent()) {
-            return categoryRepository.save(category).getId();
+            return categoryRepository.save(category);
         }
         throw new NoSuchElementException("Category with id - " + id + " doesn't exist!");
     }

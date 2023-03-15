@@ -13,7 +13,7 @@ public interface ProductService {
 
     long save(Product product);
 
-    long update(Product product, long id);
+    Product update(Product product, long id);
 
     long deleteById(long id);
 
