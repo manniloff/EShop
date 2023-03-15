@@ -57,12 +57,12 @@ stages:
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
         - task: PublishTestResults@2
-          displayName: "Publish test results"
+          displayName: "Publish core test results"
           inputs:
             testResultsFormat: "JUnit"
             mergeTestResults: true # Optional
         - task: PublishCodeCoverageResults@1
-          displayName: "Publish publish code coverage"
+          displayName: "Publish core code coverage"
           inputs:
             summaryFileLocation: $(System.DefaultWorkingDirectory)/Core/target/site/jacoco/jacoco.xml
             pathToSources: $(System.DefaultWorkingDirectory)/Core/src/main/java/
@@ -82,12 +82,12 @@ stages:
             testResultsFiles: '**/surefire-reports/TEST-*.xml'
             goals: 'package'
         - task: PublishTestResults@2
-          displayName: "Publish test results"
+          displayName: "Publish payment test results"
           inputs:
             testResultsFormat: "JUnit"
             mergeTestResults: true # Optional
         - task: PublishCodeCoverageResults@1
-          displayName: "Publish publish code coverage"
+          displayName: "Publish payment code coverage"
           inputs:
             summaryFileLocation: $(System.DefaultWorkingDirectory)/Payment/target/site/jacoco/jacoco.xml
             pathToSources: $(System.DefaultWorkingDirectory)/Payment/src/main/java/
