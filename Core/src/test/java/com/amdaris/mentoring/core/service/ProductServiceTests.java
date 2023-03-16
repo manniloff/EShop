@@ -88,6 +88,55 @@ public class ProductServiceTests {
         Assertions.assertEquals("Product with title - Vehicle product doesn't exist!", exception.getMessage());
     }
 
+    @DisplayName("Test that found list of products by symbol in title from database")
+    @Test
+    public void findAllByTitle_dataIsPresent_returnExistingData() {
+        Product vehicleProduct = new Product();
+        vehicleProduct.setTitle("Vehicle");
+        vehicleProduct.setDescription("Vehicle product");
+        vehicleProduct.setPrice(15000.0);
+        vehicleProduct.setSale((short) 0);
+        vehicleProduct.setCategories(Set.of());
+
+        productService.save(vehicleProduct);
+
+        Product gardenProduct = new Product();
+        gardenProduct.setTitle("Garden");
+        gardenProduct.setDescription("Garden product");
+        gardenProduct.setPrice(15000.0);
+        gardenProduct.setSale((short) 0);
+        gardenProduct.setCategories(Set.of());
+
+        productService.save(gardenProduct);
+
+        Product homeProduct = new Product();
+        homeProduct.setTitle("Home");
+        homeProduct.setDescription("Home product");
+        homeProduct.setPrice(15000.0);
+        homeProduct.setSale((short) 0);
+        homeProduct.setCategories(Set.of());
+
+        productService.save(homeProduct);
+
+        List<Product> findAllByE = productService.findAllByTitle("e");
+
+        Assertions.assertEquals(List.of(vehicleProduct, gardenProduct, homeProduct), findAllByE);
+
+        List<Product> findAllByH = productService.findAllByTitle("h");
+
+        Assertions.assertEquals(List.of(vehicleProduct, homeProduct), findAllByH);
+
+        List<Product> findAllByV = productService.findAllByTitle("v");
+
+        Assertions.assertEquals(List.of(vehicleProduct), findAllByV);
+    }
+
+    @DisplayName("Test that found list of products by symbol in title throws error when didn't found any item")
+    @Test
+    public void findAllByTitle_dataNoPresent_returnErrorMessage() {
+        Assertions.assertEquals(List.of(),productService.findAllByTitle("V"));
+    }
+
     @DisplayName("Test that found by id category from database")
     @Test
     public void findById_dataIsPresent_returnExistingData() {

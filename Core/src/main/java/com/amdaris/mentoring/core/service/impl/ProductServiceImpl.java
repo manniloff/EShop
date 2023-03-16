@@ -78,6 +78,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findAllByTitle(String title) {
+        return productRepository.findAllByTitleContaining(title);
+    }
+
+    @Override
     public void clear() {
         productRepository.deleteAll();
     }

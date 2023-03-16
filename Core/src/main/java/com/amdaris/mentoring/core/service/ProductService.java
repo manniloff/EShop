@@ -19,5 +19,7 @@ public interface ProductService {
 
     Optional<Product> findByTitle(String title);
 
+    List<Product> findAllByTitle(String title);
+
     void clear();
 }

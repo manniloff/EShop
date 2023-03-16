@@ -34,6 +34,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(id));
     }
 
+    @GetMapping(value = "/title/{title}", produces = "application/json")
+    ResponseEntity<?> findByTitle(@PathVariable String title) {
+        log.info("Try to get products by title - {}", title);
+        return ResponseEntity.ok(productService.findAllByTitle(title));
+    }
+
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody Product product) {
         log.info("Try to save new product with title - {}", product.getTitle());
