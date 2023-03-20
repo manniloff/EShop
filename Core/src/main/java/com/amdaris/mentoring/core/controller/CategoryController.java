@@ -31,8 +31,7 @@ public class CategoryController {
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody Category category) {
         log.info("Try to save new category with title - {}", category.getTitle());
-        categoryService.save(category);
-        return new ResponseEntity<>("Created", HttpStatus.CREATED);
+        return new ResponseEntity<>(categoryService.save(category), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")

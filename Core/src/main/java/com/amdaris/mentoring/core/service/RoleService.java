@@ -13,7 +13,7 @@ public interface RoleService {
 
     Optional<Role> findByRole(String role);
 
-    short save(Role role);
+    Role save(Role role);
 
     Role update(Role role, short id);
 

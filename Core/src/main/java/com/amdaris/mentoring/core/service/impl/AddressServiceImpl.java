@@ -47,7 +47,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public long save(Address address) {
+    public Address save(Address address) {
         Optional<Address> findByAddress = addressRepository.findByCountryAndCityAndStreetAndHouseAndBlock(
                 address.getCountry(), address.getCity(), address.getStreet(), address.getHouse(), address.getBlock());
 
@@ -56,7 +56,7 @@ public class AddressServiceImpl implements AddressService {
                     address.getStreet() + " " + address.getHouse() + " " + address.getBlock() + ", exists!");
         }
 
-        return addressRepository.save(address).getId();
+        return addressRepository.save(address);
     }
 
     @Override

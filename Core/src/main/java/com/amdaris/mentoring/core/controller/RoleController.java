@@ -37,11 +37,7 @@ public class RoleController {
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody Role role) {
         log.info("Try to save new role - {}", role.getRoleType());
-        short roleId = roleService.save(role);
-        if (roleId != 0) {
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(roleService.save(role), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")

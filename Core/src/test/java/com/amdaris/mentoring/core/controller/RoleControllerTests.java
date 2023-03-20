@@ -6,6 +6,7 @@ import com.amdaris.mentoring.core.model.Role;
 import com.amdaris.mentoring.core.repository.RoleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -131,12 +134,17 @@ public class RoleControllerTests {
         customerRole.setRoleType("CUSTOMER");
         customerRole.setUsers(Set.of());
 
-        mvc.perform(MockMvcRequestBuilders.post("/role")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/role")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerRole)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Created", result.getResponse().getContentAsString()));
+                .andReturn();
+
+        Optional<Role> customer = roleRepository.findByRoleType("CUSTOMER");
+
+        Assertions.assertEquals(objectMapper.writeValueAsString(customer.get()),
+                mvcResult.getResponse().getContentAsString());
     }
 
     @DisplayName("Test that exception throws when try to create role which already exists")

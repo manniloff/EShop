@@ -10,7 +10,7 @@ public interface UserService {
 
     Optional<User> findById(long id);
 
-    long save(User user);
+    User save(User user);
 
     User update(User user, long id);
 

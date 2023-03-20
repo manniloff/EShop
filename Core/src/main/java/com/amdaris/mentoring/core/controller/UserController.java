@@ -49,11 +49,7 @@ public class UserController {
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody User user) {
         log.info("Try to save new user with phone number - {}", user.getPhoneNumber());
-        long userId = userService.save(user);
-        if (userId != 0) {
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")

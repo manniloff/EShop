@@ -11,7 +11,7 @@ public interface ProductService {
 
     Optional<Product> findById(long id);
 
-    long save(Product product);
+    Product save(Product product);
 
     Product update(Product product, long id);
 

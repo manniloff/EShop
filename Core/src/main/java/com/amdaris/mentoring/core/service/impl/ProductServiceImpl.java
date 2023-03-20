@@ -37,13 +37,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public long save(Product product) {
+    public Product save(Product product) {
         Optional<Product> byTitle = productRepository.findByTitle(product.getTitle());
 
         if (byTitle.isPresent()) {
             throw new EntityExistsException("Product with title - " + product.getTitle() + ", exists!");
         }
-        return productRepository.save(product).getId();
+        return productRepository.save(product);
     }
 
     @Override

@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long save(User user) {
+    public User save(User user) {
         Optional<User> findByEmail = userRepository.findByEmail(user.getEmail());
 
         if (findByEmail.isPresent()) {
             throw new EntityExistsException("User with email - " + user.getEmail() + ", exists!");
         }
 
-        return userRepository.save(user).getId();
+        return userRepository.save(user);
     }
 
     @Override

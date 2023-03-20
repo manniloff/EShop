@@ -12,7 +12,7 @@ public interface AddressService {
 
     Optional<Address> findByAddress(String country, String city, String street, String house, String block);
 
-    long save(Address address);
+    Address save(Address address);
 
     Address update(Address address, long id);
 

@@ -31,11 +31,7 @@ public class AddressController {
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody Address address) {
         log.info("Try to save new address with id - {}", address.getId());
-        long addressId = addressService.save(address);
-        if (addressId != 0) {
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(addressService.save(address), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")

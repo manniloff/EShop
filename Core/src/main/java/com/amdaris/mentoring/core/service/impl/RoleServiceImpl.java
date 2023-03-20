@@ -44,14 +44,14 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public short save(Role role) {
+    public Role save(Role role) {
         Optional<Role> findByRole = roleRepository.findByRoleType(role.getRoleType());
 
         if (findByRole.isPresent()) {
             throw new EntityExistsException("Role - " + role.getRoleType() + ", exists!");
         }
 
-        return roleRepository.save(role).getId();
+        return roleRepository.save(role);
     }
 
     @Override
