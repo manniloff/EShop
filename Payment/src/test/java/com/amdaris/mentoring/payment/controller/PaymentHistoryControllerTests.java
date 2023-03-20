@@ -55,8 +55,8 @@ public class PaymentHistoryControllerTests {
         paymentHistoryRepository.deleteAll();
 
         PaymentMethod cardPaymentMethod = new PaymentMethod();
-        cardPaymentMethod.setTitle("card");
-        cardPaymentMethod.setDetails("pay with visa/mastercard card");
+        cardPaymentMethod.setTitle("cash");
+        cardPaymentMethod.setDetails("pay with cash");
 
         PaymentHistory paymentHistory = new PaymentHistory();
         paymentHistory.setOrderId(1L);
