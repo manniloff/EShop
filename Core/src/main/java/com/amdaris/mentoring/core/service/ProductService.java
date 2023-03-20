@@ -13,11 +13,13 @@ public interface ProductService {
 
     long save(Product product);
 
-    long update(Product product, long id);
+    Product update(Product product, long id);
 
     long deleteById(long id);
 
     Optional<Product> findByTitle(String title);
+
+    List<Product> findAllByTitle(String title);
 
     void clear();
 }

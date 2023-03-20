@@ -31,21 +31,14 @@ public class CategoryController {
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody Category category) {
         log.info("Try to save new category with title - {}", category.getTitle());
-        short categoryId = categoryService.save(category);
-        if (categoryId != 0) {
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        categoryService.save(category);
+        return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{id}", produces = "application/json")
+    @PatchMapping(value = "/{id}", produces = "application/json")
     ResponseEntity<?> update(@RequestBody Category category, @PathVariable short id) {
         log.info("Try to update category with title - {}", category.getTitle());
-        Short categoryId = categoryService.update(category, id);
-        if (categoryId != 0) {
-            return new ResponseEntity<>("Updated", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Not Modified", HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(categoryService.update(category, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")

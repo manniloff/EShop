@@ -47,11 +47,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public long update(Product product, long id) {
+    public Product update(Product product, long id) {
         Optional<Product> byId = productRepository.findById(id);
 
         if (byId.isPresent()) {
-            return productRepository.save(product).getId();
+            return productRepository.save(product);
         }
         throw new NoSuchElementException("Product with id - " + id + " doesn't exist!");
     }
@@ -75,6 +75,11 @@ public class ProductServiceImpl implements ProductService {
         } else {
             throw new NoSuchElementException("Product with title - " + title + " doesn't exist!");
         }
+    }
+
+    @Override
+    public List<Product> findAllByTitle(String title) {
+        return productRepository.findAllByTitleContaining(title);
     }
 
     @Override

@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - Core
+
+stages:
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: CodeCoverage
+        displayName: Code Coverage
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+        - task: Maven@3
+          displayName: "Maven Test"
+          inputs:
+            mavenPomFile: "./Core/pom.xml"
+            goals: "test"
+
+        - task: PublishTestResults@2
+          displayName: "Publish test results"
+          inputs:
+            testResultsFormat: "JUnit"
+            mergeTestResults: true # Optional
+        - task: PublishCodeCoverageResults@1
+          displayName: "Publish publish code coverage"
+          inputs:
+            summaryFileLocation: $(System.DefaultWorkingDirectory)/Core/target/site/jacoco/jacoco.xml
+            pathToSources: $(System.DefaultWorkingDirectory)/Core/src/main/java/
