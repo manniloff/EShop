@@ -44,14 +44,10 @@ public class RoleController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @PutMapping(value = "/{id}", produces = "application/json")
+    @PatchMapping(value = "/{id}", produces = "application/json")
     ResponseEntity<?> update(@RequestBody Role role, @PathVariable short id) {
         log.info("Try to update role - {}", role.getRoleType());
-        short roleId = roleService.update(role, id);
-        if (roleId != 0) {
-            return new ResponseEntity<>("Updated", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Not Modified", HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(roleService.update(role, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")

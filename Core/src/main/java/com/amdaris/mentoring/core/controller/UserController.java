@@ -56,14 +56,10 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @PutMapping(value = "/{id}", produces = "application/json")
+    @PatchMapping(value = "/{id}", produces = "application/json")
     ResponseEntity<?> update(@RequestBody User user, @PathVariable long id) {
         log.info("Try to update user with phone number - {}", user.getPhoneNumber());
-        long userId = userService.update(user, id);
-        if (userId != 0) {
-            return new ResponseEntity<>("Updated", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Not Modified", HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(userService.update(user, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")

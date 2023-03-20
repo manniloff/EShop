@@ -158,12 +158,12 @@ public class AddressControllerTests {
         Address address = addressRepository.save(firstAddress);
 
         firstAddress.setCity("Balti");
-        mvc.perform(MockMvcRequestBuilders.put("/address/" + address.getId())
+        mvc.perform(MockMvcRequestBuilders.patch("/address/" + address.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(firstAddress)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Updated", result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(firstAddress), result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update address which not exist")
@@ -178,7 +178,7 @@ public class AddressControllerTests {
         firstAddress.setHouse("21");
         firstAddress.setBlock("A");
 
-        mvc.perform(MockMvcRequestBuilders.put("/address/1")
+        mvc.perform(MockMvcRequestBuilders.patch("/address/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(firstAddress)))
                 .andExpect(status().isNotFound())

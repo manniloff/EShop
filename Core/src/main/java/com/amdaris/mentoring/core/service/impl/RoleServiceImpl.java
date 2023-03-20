@@ -55,11 +55,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public short update(Role role, short id) {
+    public Role update(Role role, short id) {
         Optional<Role> findById = roleRepository.findById(id);
 
         if (findById.isPresent()) {
-            return roleRepository.save(role).getId();
+            return roleRepository.save(role);
         }
         throw new NoSuchElementException("Role with id - " + id + " doesn't exist!");
     }

@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long update(User user, long id) {
+    public User update(User user, long id) {
         Optional<User> findById = userRepository.findById(id);
 
         if (findById.isPresent()) {
-            return userRepository.save(user).getId();
+            return userRepository.save(user);
         }
         throw new NoSuchElementException("User with id - " + id + " doesn't exist!");
     }
