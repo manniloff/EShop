@@ -301,12 +301,12 @@ public class UserControllerTests {
         User user = userRepository.save(firtUser);
 
         firtUser.setEmail("test@amdaris.md");
-        mvc.perform(MockMvcRequestBuilders.put("/user/" + user.getId())
+        mvc.perform(MockMvcRequestBuilders.patch("/user/" + user.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(firtUser)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Updated", result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(firtUser), result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update user which not exist")
@@ -324,7 +324,7 @@ public class UserControllerTests {
         firtUser.setAddresses(Set.of());
         firtUser.setPassword("secretpass");
 
-        mvc.perform(MockMvcRequestBuilders.put("/user/1")
+        mvc.perform(MockMvcRequestBuilders.patch("/user/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(firtUser)))
                 .andExpect(status().isNotFound())

@@ -14,7 +14,7 @@ public interface AddressService {
 
     long save(Address address);
 
-    long update(Address address, long id);
+    Address update(Address address, long id);
 
     long deleteById(long id);
 

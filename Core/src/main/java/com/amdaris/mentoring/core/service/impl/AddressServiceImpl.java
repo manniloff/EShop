@@ -60,11 +60,11 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public long update(Address address, long id) {
+    public Address update(Address address, long id) {
         Optional<Address> findById = addressRepository.findById(id);
 
         if (findById.isPresent()) {
-            return addressRepository.save(address).getId();
+            return addressRepository.save(address);
         }
         throw new NoSuchElementException("Address with id - " + id + " doesn't exist!");
     }

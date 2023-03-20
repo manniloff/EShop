@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
+@Controller
 @RequestMapping("/address")
 @RequiredArgsConstructor
 public class AddressController {
@@ -36,14 +38,10 @@ public class AddressController {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @PutMapping(value = "/{id}", produces = "application/json")
+    @PatchMapping(value = "/{id}", produces = "application/json")
     ResponseEntity<?> update(@RequestBody Address address, @PathVariable long id) {
         log.info("Try to update address with id- {}", address.getId());
-        long addressId = addressService.update(address, id);
-        if (addressId != 0) {
-            return new ResponseEntity<>("Updated", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>("Not Modified", HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(addressService.update(address, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")

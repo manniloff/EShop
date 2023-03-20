@@ -172,12 +172,12 @@ public class RoleControllerTests {
         Role role = roleRepository.save(customerRole);
 
         customerRole.setRoleType("MODERATOR");
-        mvc.perform(MockMvcRequestBuilders.put("/role/" + role.getId())
+        mvc.perform(MockMvcRequestBuilders.patch("/role/" + role.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerRole)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Updated", result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(customerRole), result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update role which not exist")
@@ -189,7 +189,7 @@ public class RoleControllerTests {
         customerRole.setRoleType("CUSTOMER");
         customerRole.setUsers(Set.of());
 
-        mvc.perform(MockMvcRequestBuilders.put("/role/1")
+        mvc.perform(MockMvcRequestBuilders.patch("/role/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerRole)))
                 .andExpect(status().isNotFound())
