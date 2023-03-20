@@ -35,14 +35,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Short save(Category category) {
+    public Category save(Category category) {
         Optional<Category> byTitle = categoryRepository.findByTitle(category.getTitle());
 
         if (byTitle.isPresent()) {
             throw new EntityExistsException("Category with title - " + category.getTitle() + ", exists!");
         }
 
-        return categoryRepository.save(category).getId();
+        return categoryRepository.save(category);
     }
 
     @Override

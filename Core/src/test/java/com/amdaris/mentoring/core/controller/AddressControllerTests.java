@@ -5,6 +5,7 @@ import com.amdaris.mentoring.core.model.Address;
 import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -111,12 +114,20 @@ public class AddressControllerTests {
         firstAddress.setHouse("21");
         firstAddress.setBlock("A");
 
-        mvc.perform(MockMvcRequestBuilders.post("/address")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/address")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(firstAddress)))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Created", result.getResponse().getContentAsString()));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
+
+        Optional<Address> byCountryAndCityAndStreetAndHouseAndBlock =
+                addressRepository.findByCountryAndCityAndStreetAndHouseAndBlock(firstAddress.getCountry(),
+                        firstAddress.getCity(), firstAddress.getStreet(), firstAddress.getHouse(), firstAddress.getBlock());
+
+        Assertions.assertEquals(objectMapper.writeValueAsString(byCountryAndCityAndStreetAndHouseAndBlock.get()),
+                mvcResult.getResponse().getContentAsString());
+        //.andExpect(result -> assertEquals(byCountryAndCityAndStreetAndHouseAndBlock,
+        //        result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to create address which already exists")

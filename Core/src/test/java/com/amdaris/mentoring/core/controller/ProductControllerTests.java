@@ -6,6 +6,7 @@ import com.amdaris.mentoring.core.model.Product;
 import com.amdaris.mentoring.core.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -115,12 +118,16 @@ public class ProductControllerTests {
         vehicleProduct.setSale((short)0);
         vehicleProduct.setCategories(Set.of());
 
-        mvc.perform(MockMvcRequestBuilders.post("/product")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vehicleProduct)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Created", result.getResponse().getContentAsString()));
+                .andReturn();
+
+        Optional<Product> byTitle = productRepository.findByTitle(vehicleProduct.getTitle());
+
+        Assertions.assertEquals(objectMapper.writeValueAsString(byTitle.get()), mvcResult.getResponse().getContentAsString());
     }
 
     @DisplayName("Test that exception throws when try to create product which already exists")

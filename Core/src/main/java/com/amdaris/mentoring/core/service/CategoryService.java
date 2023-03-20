@@ -10,7 +10,7 @@ public interface CategoryService {
 
     Optional<Category> findById(Short id);
 
-    Short save(Category category);
+    Category save(Category category);
 
     Category update(Category category, short id);
 

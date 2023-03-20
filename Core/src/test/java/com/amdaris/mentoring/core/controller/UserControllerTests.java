@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityExistsException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -248,12 +251,16 @@ public class UserControllerTests {
         firtUser.setAddresses(Set.of());
         firtUser.setPassword("secretpass");
 
-        mvc.perform(MockMvcRequestBuilders.post("/user")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(firtUser)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Created", result.getResponse().getContentAsString()));
+                .andReturn();
+
+        Optional<User> byEmail = userRepository.findByEmail(firtUser.getEmail());
+
+        Assertions.assertEquals(objectMapper.writeValueAsString(byEmail.get()), mvcResult.getResponse().getContentAsString());
     }
 
     @DisplayName("Test that exception throws when try to create user which already exists")
