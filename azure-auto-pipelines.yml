@@ -89,7 +89,7 @@ stages:
         - task: PublishCodeCoverageResults@1
           displayName: "Publish payment code coverage"
           inputs:
-            summaryFileLocation: $(System.DefaultWorkingDirectory)/Payment/target/site/jacoco/jacoco.xml
+            summaryFileLocation: $(System.DefaultWorkingDirectory)/Payment/target/site/jacoco-aggregate/jacoco.xml
             pathToSources: $(System.DefaultWorkingDirectory)/Payment/src/main/java/
 
 - stage: Build_shipment_service
