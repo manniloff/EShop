@@ -7,6 +7,7 @@ import com.amdaris.mentoring.payment.model.PaymentMethod;
 import com.amdaris.mentoring.payment.repository.PaymentMethodRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityExistsException;
@@ -32,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = PaymentMicroservice.class)
 @AutoConfigureMockMvc
-public class PaymentMethodControllerTests {
+public class PaymentMethodControllerTestsIT {
     @Autowired
     private PaymentMethodRepository paymentMethodRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -99,16 +101,19 @@ public class PaymentMethodControllerTests {
     @Test
     public void create_dataNoPresent_returnSavedDataId() throws Exception {
         paymentMethodRepository.deleteAll();
-        PaymentMethodDto cardPaymentMethod = new PaymentMethodDto();
-        cardPaymentMethod.setTitle("paypal");
-        cardPaymentMethod.setDetails("pay with paypal service");
+        PaymentMethodDto paypalPaymentMethod = new PaymentMethodDto();
+        paypalPaymentMethod.setTitle("paypal");
+        paypalPaymentMethod.setDetails("pay with paypal service");
 
-        mvc.perform(MockMvcRequestBuilders.post("/payment/method")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/payment/method")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(cardPaymentMethod)))
+                        .content(objectMapper.writeValueAsString(paypalPaymentMethod)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Created", result.getResponse().getContentAsString()));
+                .andReturn();
+
+        PaymentMethod expected = paymentMethodRepository.findByTitle(paypalPaymentMethod.getTitle());
+        Assertions.assertEquals(objectMapper.writeValueAsString(expected),mvcResult.getResponse().getContentAsString());
     }
 
     @DisplayName("Test that exception throws when try to create payment method which already exists")
@@ -135,35 +140,24 @@ public class PaymentMethodControllerTests {
     @Test
     public void update_dataIsPresent_returnUpdatedDataId() throws Exception {
         paymentMethodRepository.deleteAll();
-        PaymentMethod cardPaymentMethod = new PaymentMethod();
-        cardPaymentMethod.setTitle("card");
-        cardPaymentMethod.setDetails("pay with visa/mastercard card");
+        PaymentMethod yandexMoneyPaymentMethod = new PaymentMethod();
+        yandexMoneyPaymentMethod.setTitle("yandexMoney");
+        yandexMoneyPaymentMethod.setDetails("pay with yandexMoney service");
 
-        paymentMethodRepository.save(cardPaymentMethod);
+        paymentMethodRepository.save(yandexMoneyPaymentMethod);
 
-        Optional<PaymentMethod> card = paymentMethodRepository.findAll()
-                .stream()
-                .filter(paymentMethod -> paymentMethod.getTitle().equals("card"))
-                .findFirst();
+        yandexMoneyPaymentMethod.setDetails("updated pay with yandexMoney service");
 
-        if (card.isPresent()) {
-            cardPaymentMethod.setDetails("updated card details");
-            mvc.perform(MockMvcRequestBuilders.put("/payment/method/" + card.get().getId())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(cardPaymentMethod)))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                    .andExpect(result -> assertEquals("Updated", result.getResponse().getContentAsString()));
-        } else {
-            paymentMethodRepository.save(cardPaymentMethod);
+        PaymentMethod paymentMethod = paymentMethodRepository.findByTitle(yandexMoneyPaymentMethod.getTitle());
+        paymentMethod.setDetails("updated pay with yandexMoney service");
 
-            mvc.perform(MockMvcRequestBuilders.put("/payment/method/1")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(cardPaymentMethod)))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                    .andExpect(result -> assertEquals("Updated", result.getResponse().getContentAsString()));
-        }
+        mvc.perform(MockMvcRequestBuilders.put("/payment/method/" + paymentMethod.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(yandexMoneyPaymentMethod)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(paymentMethod),
+                        result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update payment method which not exist")
