@@ -38,16 +38,16 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
     }
 
     @Override
-    public short save(PaymentMethodDto paymentMethodDto) {
+    public PaymentMethod save(PaymentMethodDto paymentMethodDto) {
         boolean isPresent = paymentMethodRepository.existsByTitle(paymentMethodDto.getTitle());
         if (isPresent) {
             throw new EntityExistsException("Payment method with title - " + paymentMethodDto.getTitle() + " exists!");
         }
-        return paymentMethodRepository.save(PaymentMethodConverter.toPaymentMethod.apply(paymentMethodDto)).getId();
+        return paymentMethodRepository.save(PaymentMethodConverter.toPaymentMethod.apply(paymentMethodDto));
     }
 
     @Override
-    public short update(PaymentMethodDto paymentMethodDto, short id) {
+    public PaymentMethod update(PaymentMethodDto paymentMethodDto, short id) {
         Optional<PaymentMethod> paymentMethod = paymentMethodRepository.findById(id);
 
         if (paymentMethod.isPresent()) {
@@ -55,7 +55,7 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
             paymentMethod.get().setDetails(paymentMethodDto.getDetails());
 
             paymentMethodRepository.save(paymentMethod.get());
-            return paymentMethod.get().getId();
+            return paymentMethod.get();
         }
         throw new NoSuchElementException("Payment method with id - " + id + " doesn't exist!");
     }

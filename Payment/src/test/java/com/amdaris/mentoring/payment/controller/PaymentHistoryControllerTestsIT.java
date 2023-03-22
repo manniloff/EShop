@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = PaymentMicroservice.class)
 @AutoConfigureMockMvc
-public class PaymentHistoryControllerTests {
+public class PaymentHistoryControllerTestsIT {
 
     @Autowired
     private PaymentHistoryRepository paymentHistoryRepository;
