@@ -10,9 +10,9 @@ public interface PaymentMethodService {
 
     PaymentMethodDto findById(short id);
 
-    short save(PaymentMethodDto paymentMethodDto);
+    PaymentMethod save(PaymentMethodDto paymentMethodDto);
 
-    short update(PaymentMethodDto paymentMethodDto, short id);
+    PaymentMethod update(PaymentMethodDto paymentMethodDto, short id);
 
     short deleteById(short id);
 

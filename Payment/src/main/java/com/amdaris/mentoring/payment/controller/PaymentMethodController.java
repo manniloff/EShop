@@ -31,21 +31,13 @@ public class PaymentMethodController {
     @PostMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> create(@RequestBody PaymentMethodDto paymentMethodDto) {
         log.info("Creating payment method");
-        short id = paymentMethodService.save(paymentMethodDto);
-        if (id != 0) {
-            return new ResponseEntity<>("Created", HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(paymentMethodService.save(paymentMethodDto), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", produces = "application/json")
     ResponseEntity<?> update(@RequestBody PaymentMethodDto paymentMethodDto, @PathVariable short id) {
         log.info("Updating payment method with id - ", id);
-        short paymentMethodId = paymentMethodService.update(paymentMethodDto, id);
-        if (paymentMethodId != 0) {
-            return ResponseEntity.ok("Updated");
-        }
-        return new ResponseEntity<>("Not Modified", HttpStatus.NOT_MODIFIED);
+        return ResponseEntity.ok(paymentMethodService.update(paymentMethodDto, id));
     }
 
     @DeleteMapping(value = {"/{id}"}, produces = "application/json")
