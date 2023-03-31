@@ -1,25 +1,33 @@
 package com.amdaris.mentoring.core.service;
 
-import com.amdaris.mentoring.core.model.Product;
+import com.amdaris.mentoring.core.dto.ProductDto;
+import com.amdaris.mentoring.core.dto.criteria.ProductSearchCriteria;
+import com.amdaris.mentoring.core.util.PageView;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductService {
-    List<Product> findAll(Pageable pageable);
+    Page<ProductDto> findByCriteria(PageView pageView, ProductSearchCriteria productSearchCriteria);
 
-    Optional<Product> findById(long id);
+    List<ProductDto> findAll(Pageable pageable);
 
-    Product save(Product product);
+    List<ProductDto> findAllPageableAndSortAndFilter(PageView pageView);
 
-    Product update(Product product, long id);
+    ProductDto findById(long id);
+
+    ProductDto save(ProductDto product);
+
+    ProductDto update(ProductDto product, long id);
+
+    long findProductId(String title);
 
     long deleteById(long id);
 
-    Optional<Product> findByTitle(String title);
+    ProductDto findByTitle(String title);
 
-    List<Product> findAllByTitle(String title);
+    List<ProductDto> findAllByTitle(String title);
 
     void clear();
 }

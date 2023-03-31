@@ -1,19 +1,24 @@
 package com.amdaris.mentoring.core.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"user"})
+@RequiredArgsConstructor
+@ToString
 public class Address {
 
     @Id
+    @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String country;
@@ -21,10 +26,13 @@ public class Address {
     private String street;
     private String block;
     private String house;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "addresses", cascade = {
             CascadeType.PERSIST,
-            CascadeType.MERGE
+            CascadeType.MERGE,
+            CascadeType.DETACH
     })
+    @JsonIgnoreProperties("categories")
+    @EqualsAndHashCode.Exclude
     @JsonIgnore
-    private User user;
+    private Set<User> users = new HashSet<>();
 }

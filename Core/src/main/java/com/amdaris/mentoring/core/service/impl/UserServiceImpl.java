@@ -1,16 +1,24 @@
 package com.amdaris.mentoring.core.service.impl;
 
+import com.amdaris.mentoring.core.dto.UserDto;
+import com.amdaris.mentoring.core.dto.converter.UserConverter;
+import com.amdaris.mentoring.core.dto.criteria.UserSearchCriteria;
 import com.amdaris.mentoring.core.model.User;
+import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.amdaris.mentoring.core.repository.UserRepository;
 import com.amdaris.mentoring.core.service.UserService;
+import com.amdaris.mentoring.core.util.PageView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -18,38 +26,57 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    private final AddressRepository addressRepository;
+
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Page<UserDto> findByCriteria(PageView pageView, UserSearchCriteria criteria) {
+        List<Long> addresses = Optional.ofNullable(criteria.getAddresses()).orElse(addressRepository.findAllIds());
+
+        return userRepository.findByCriteria(addresses, criteria.getEmail(), criteria.getPhoneNumber(),
+                criteria.getFirstName(), criteria.getLastName(), criteria.getRole(), criteria.getStartPeriod(),
+                criteria.getEndPeriod(), PageRequest.of(pageView.getPage(), pageView.getPageSize())
+                        .withSort(pageView.getSortDirection(), pageView.getSort())
+
+        ).map(user -> UserConverter.toUserDto.apply(user));
+    }
+
+
+    @Override
+    public List<UserDto> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> UserConverter.toUserDto.apply(user))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<User> findById(long id) {
+    public UserDto findById(long id) {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isPresent()) {
-            return user;
+            return UserConverter.toUserDto.apply(user.get());
         }
         throw new NoSuchElementException("User with id - " + id + " doesn't exist!");
     }
 
     @Override
-    public User save(User user) {
-        Optional<User> findByEmail = userRepository.findByEmail(user.getEmail());
+    public UserDto save(UserDto userDto) {
+        Optional<User> findByEmail = userRepository.findByEmail(userDto.getEmail());
 
         if (findByEmail.isPresent()) {
-            throw new EntityExistsException("User with email - " + user.getEmail() + ", exists!");
+            throw new EntityExistsException("User with email - " + userDto.getEmail() + ", exists!");
         }
-
-        return userRepository.save(user);
+        User user = UserConverter.toUser.apply(userDto);
+        return UserConverter.toUserDto.apply(userRepository.save(user));
     }
 
     @Override
-    public User update(User user, long id) {
+    public UserDto update(UserDto userDto, long id) {
         Optional<User> findById = userRepository.findById(id);
 
         if (findById.isPresent()) {
-            return userRepository.save(user);
+            User user = UserConverter.toUser.apply(userDto);
+            return UserConverter.toUserDto.apply(userRepository.save(user));
         }
         throw new NoSuchElementException("User with id - " + id + " doesn't exist!");
     }
@@ -66,33 +93,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
+    public UserDto findByEmail(String email) {
         Optional<User> findByEmail = userRepository.findByEmail(email);
 
         if (findByEmail.isPresent()) {
-            return findByEmail;
+            return UserConverter.toUserDto.apply(findByEmail.get());
         }
         throw new NoSuchElementException("User with email - " + email + " doesn't exist!");
     }
 
     @Override
-    public Optional<User> findByPhoneNumber(String phoneNumber) {
-        Optional<User> findByEmail = userRepository.findByPhoneNumber(phoneNumber);
+    public UserDto findByPhoneNumber(String phoneNumber) {
+        Optional<User> findByPhone = userRepository.findByPhoneNumber(phoneNumber);
 
-        if (findByEmail.isPresent()) {
-            return findByEmail;
+        if (findByPhone.isPresent()) {
+            return UserConverter.toUserDto.apply(findByPhone.get());
         }
         throw new NoSuchElementException("User with phone - " + phoneNumber + " doesn't exist!");
     }
 
     @Override
-    public Optional<User> findLastName(String lastName) {
-        Optional<User> findByLastName = userRepository.findByLastName(lastName);
+    public List<UserDto> findByFullName(String fullName) {
+        List<User> findByLastName = userRepository.findByFullName(fullName);
 
-        if (findByLastName.isPresent()) {
-            return findByLastName;
+        if (!findByLastName.isEmpty()) {
+            return findByLastName.stream()
+                    .map(user -> UserConverter.toUserDto.apply(user))
+                    .collect(Collectors.toList());
         }
-        throw new NoSuchElementException("User with last name - " + lastName + " doesn't exist!");
+        throw new NoSuchElementException("User with full name - " + fullName + " doesn't exist!");
     }
 
     @Override

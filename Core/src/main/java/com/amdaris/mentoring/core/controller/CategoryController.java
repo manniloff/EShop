@@ -1,6 +1,6 @@
 package com.amdaris.mentoring.core.controller;
 
-import com.amdaris.mentoring.core.model.Category;
+import com.amdaris.mentoring.core.dto.CategoryDto;
 import com.amdaris.mentoring.core.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,15 +29,15 @@ public class CategoryController {
     }
 
     @PostMapping(value = {"", "/"}, produces = "application/json")
-    ResponseEntity<?> create(@RequestBody Category category) {
-        log.info("Try to save new category with title - {}", category.getTitle());
-        return new ResponseEntity<>(categoryService.save(category), HttpStatus.CREATED);
+    ResponseEntity<?> create(@RequestBody CategoryDto categoryDto) {
+        log.info("Try to save new category with title - {}", categoryDto.getTitle());
+        return new ResponseEntity<>(categoryService.save(categoryDto), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")
-    ResponseEntity<?> update(@RequestBody Category category, @PathVariable short id) {
-        log.info("Try to update category with title - {}", category.getTitle());
-        return new ResponseEntity<>(categoryService.update(category, id), HttpStatus.CREATED);
+    ResponseEntity<?> update(@RequestBody CategoryDto categoryDto, @PathVariable short id) {
+        log.info("Try to update category with title - {}", categoryDto.getTitle());
+        return new ResponseEntity<>(categoryService.update(categoryDto, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")

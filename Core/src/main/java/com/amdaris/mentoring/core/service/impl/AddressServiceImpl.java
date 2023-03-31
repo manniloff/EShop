@@ -1,5 +1,7 @@
 package com.amdaris.mentoring.core.service.impl;
 
+import com.amdaris.mentoring.core.dto.AddressDto;
+import com.amdaris.mentoring.core.dto.converter.AddressConverter;
 import com.amdaris.mentoring.core.model.Address;
 import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.amdaris.mentoring.core.service.AddressService;
@@ -11,6 +13,7 @@ import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,52 +22,57 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
 
     @Override
-    public List<Address> findAll() {
-        return addressRepository.findAll();
+    public List<AddressDto> findAll() {
+        return addressRepository.findAll()
+                .stream()
+                .map(address -> AddressConverter.toAddressDto.apply(address))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Address> findById(long id) {
+    public AddressDto findById(long id) {
         Optional<Address> address = addressRepository.findById(id);
 
         if (address.isPresent()) {
-            return address;
+            return AddressConverter.toAddressDto.apply(address.get());
         }
         throw new NoSuchElementException("Address with id - " + id + " doesn't exist!");
     }
 
     @Override
-    public Optional<Address> findByAddress(String country, String city, String street, String house, String block) {
-        Optional<Address> findByAddress = addressRepository.findByCountryAndCityAndStreetAndHouseAndBlock(
-                country, city, street, house, block);
-
-        if (findByAddress.isPresent()) {
-            return findByAddress;
+    public List<AddressDto> findByPartOfAddress(String filter) {
+        List<Address> findByAddress = addressRepository.findByFilter(filter);
+        if (!findByAddress.isEmpty()) {
+            return findByAddress.stream()
+                    .map(address -> AddressConverter.toAddressDto.apply(address))
+                    .collect(Collectors.toList());
         }
 
-        throw new NoSuchElementException("Address - " + country + " " + city + " " + street + " " + house +
-                " " + block + ", doesn't exists!");
+        throw new NoSuchElementException("Address - " + filter + ", doesn't found!");
     }
 
     @Override
-    public Address save(Address address) {
-        Optional<Address> findByAddress = addressRepository.findByCountryAndCityAndStreetAndHouseAndBlock(
-                address.getCountry(), address.getCity(), address.getStreet(), address.getHouse(), address.getBlock());
+    public AddressDto save(AddressDto addressDto) {
+        List<Address> byFilter = addressRepository.findByFilter(addressDto.getCountry() + " " +
+                addressDto.getCity() + " " + addressDto.getStreet() + " " +
+                addressDto.getHouse() + " " + addressDto.getBlock());
 
-        if (findByAddress.isPresent()) {
-            throw new EntityExistsException("Address - " + address.getCountry() + " " + address.getCity() + " " +
-                    address.getStreet() + " " + address.getHouse() + " " + address.getBlock() + ", exists!");
+        if (byFilter.size() > 0) {
+            throw new EntityExistsException("Address - " + addressDto + ", already exists");
         }
 
-        return addressRepository.save(address);
+        Address address = AddressConverter.toAddress.apply(addressDto);
+        return AddressConverter.toAddressDto.apply(addressRepository.save(address));
     }
 
     @Override
-    public Address update(Address address, long id) {
+    public AddressDto update(AddressDto addressDto, long id) {
         Optional<Address> findById = addressRepository.findById(id);
+        Address address = AddressConverter.toAddress.apply(addressDto);
 
         if (findById.isPresent()) {
-            return addressRepository.save(address);
+            address.setId(findById.get().getId());
+            return AddressConverter.toAddressDto.apply(addressRepository.save(address));
         }
         throw new NoSuchElementException("Address with id - " + id + " doesn't exist!");
     }
