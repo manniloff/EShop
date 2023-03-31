@@ -1,6 +1,7 @@
 package com.amdaris.mentoring.core.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,5 +31,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleMethodArgumentTypeMismatchException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return new ResponseEntity<>("argument_type_mismatch", HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolationException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return new ResponseEntity<>("data_not_unique", HttpStatus.CONFLICT);
     }
 }

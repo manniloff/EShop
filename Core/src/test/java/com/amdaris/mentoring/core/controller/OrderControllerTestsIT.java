@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = CoreMicroservice.class)
 @AutoConfigureMockMvc
-public class OrderControllerTests {
+public class OrderControllerTestsIT {
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private MockMvc mvc;

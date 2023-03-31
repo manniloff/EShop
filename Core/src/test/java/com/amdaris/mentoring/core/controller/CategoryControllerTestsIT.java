@@ -1,10 +1,13 @@
 package com.amdaris.mentoring.core.controller;
 
 import com.amdaris.mentoring.core.CoreMicroservice;
+import com.amdaris.mentoring.core.dto.CategoryDto;
+import com.amdaris.mentoring.core.dto.converter.CategoryConverter;
 import com.amdaris.mentoring.core.model.Category;
 import com.amdaris.mentoring.core.repository.CategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = CoreMicroservice.class)
 @AutoConfigureMockMvc
-public class CategoryControllerTests {
+public class CategoryControllerTestsIT {
     @Autowired
     private CategoryRepository categoryRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -54,7 +58,10 @@ public class CategoryControllerTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(categories),
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(
+                                categories.stream()
+                                        .map(category -> CategoryConverter.toCategoryDto.apply(category))
+                                        .collect(Collectors.toList())),
                         result.getResponse().getContentAsString()));
     }
 
@@ -72,7 +79,8 @@ public class CategoryControllerTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(vehicleCategory),
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(
+                        CategoryConverter.toCategoryDto.apply(vehicleCategory)),
                         result.getResponse().getContentAsString()));
     }
 
@@ -95,13 +103,21 @@ public class CategoryControllerTests {
 
         Category animalCategory = new Category();
         animalCategory.setTitle("Animal");
+        CategoryDto categoryDto = CategoryConverter.toCategoryDto.apply(animalCategory);
 
-        mvc.perform(MockMvcRequestBuilders.post("/category")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/category")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(animalCategory)))
+                        .content(objectMapper.writeValueAsString(categoryDto)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Created", result.getResponse().getContentAsString()));
+                .andReturn();
+
+        CategoryDto byTitle = CategoryConverter.toCategoryDto.apply(
+                categoryRepository.findByTitle(animalCategory.getTitle()).get()
+        );
+
+        Assertions.assertEquals(objectMapper.writeValueAsString(byTitle),
+                mvcResult.getResponse().getContentAsString());
     }
 
     @DisplayName("Test that exception throws when try to create category which already exists")
@@ -135,12 +151,14 @@ public class CategoryControllerTests {
         Category category = categoryRepository.save(homeCategory);
 
         homeCategory.setTitle("Home updated");
+        CategoryDto categoryDto = CategoryConverter.toCategoryDto.apply(category);
+
         mvc.perform(MockMvcRequestBuilders.patch("/category/" + category.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(homeCategory)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(homeCategory), result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(categoryDto), result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update category which not exist")

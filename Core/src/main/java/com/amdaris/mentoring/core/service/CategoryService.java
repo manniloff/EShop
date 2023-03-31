@@ -1,22 +1,21 @@
 package com.amdaris.mentoring.core.service;
 
-import com.amdaris.mentoring.core.model.Category;
+import com.amdaris.mentoring.core.dto.CategoryDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CategoryService {
-    List<Category> findAll();
+    List<CategoryDto> findAll();
 
-    Optional<Category> findById(Short id);
+    CategoryDto findById(short id);
 
-    Short save(Category category);
+    CategoryDto save(CategoryDto category);
 
-    Category update(Category category, short id);
+    CategoryDto update(CategoryDto category, short id);
 
     Short deleteById(short id);
 
-    Optional<Category> findByTitle(String title);
+    CategoryDto findByTitle(String title);
 
     void clear();
 }
