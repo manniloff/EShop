@@ -1,6 +1,8 @@
 package com.amdaris.mentoring.core.controller;
 
 import com.amdaris.mentoring.core.CoreMicroservice;
+import com.amdaris.mentoring.core.dto.AddressDto;
+import com.amdaris.mentoring.core.dto.converter.AddressConverter;
 import com.amdaris.mentoring.core.model.Address;
 import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = CoreMicroservice.class)
 @AutoConfigureMockMvc
-public class AddressControllerTests {
+public class AddressControllerTestsIT {
     @Autowired
     private AddressRepository addressRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -64,7 +66,11 @@ public class AddressControllerTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(addresses),
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(
+                                addresses.stream()
+                                        .map(address -> AddressConverter.toAddressDto.apply(address))
+                                        .collect(Collectors.toList())
+                        ),
                         result.getResponse().getContentAsString()));
     }
 
@@ -86,7 +92,9 @@ public class AddressControllerTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(firstAddress),
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(
+                                AddressConverter.toAddressDto.apply(firstAddress)
+                        ),
                         result.getResponse().getContentAsString()));
     }
 
@@ -100,6 +108,42 @@ public class AddressControllerTests {
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NoSuchElementException))
                 .andExpect(result -> assertEquals("Address with id - 1 doesn't exist!", result.getResolvedException().getMessage()));
+    }
+
+    @DisplayName("Test that endpoint return address by id")
+    @Test
+    public void findByFilter_dataIsPresent_returnExistingData() throws Exception {
+        addressRepository.deleteAll();
+
+        Address firstAddress = new Address();
+        firstAddress.setCountry("Moldova");
+        firstAddress.setCity("Chisinau");
+        firstAddress.setStreet("31 August str.");
+        firstAddress.setHouse("21");
+        firstAddress.setBlock("A");
+
+        Address address = addressRepository.save(firstAddress);
+
+        mvc.perform(MockMvcRequestBuilders.get("/address/part/" + address.getCountry())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(
+                                List.of(AddressConverter.toAddressDto.apply(address))
+                        ),
+                        result.getResponse().getContentAsString()));
+    }
+
+    @DisplayName("Test that endpoint throw error message when try to get not exists address by filter")
+    @Test
+    public void findByFilter_dataNoPresent_returnErrorMessage() throws Exception {
+        addressRepository.deleteAll();
+
+        mvc.perform(MockMvcRequestBuilders.get("/address/part/Cahul")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NoSuchElementException))
+                .andExpect(result -> assertEquals("Address - Cahul, doesn't found!", result.getResolvedException().getMessage()));
     }
 
     @DisplayName("Test that endpoint create new address")
@@ -120,14 +164,14 @@ public class AddressControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
 
-        Optional<Address> byCountryAndCityAndStreetAndHouseAndBlock =
-                addressRepository.findByCountryAndCityAndStreetAndHouseAndBlock(firstAddress.getCountry(),
-                        firstAddress.getCity(), firstAddress.getStreet(), firstAddress.getHouse(), firstAddress.getBlock());
+        List<Address> byCountryAndCityAndStreetAndHouseAndBlock =
+                addressRepository.findByFilter(firstAddress.getCountry() + " " + firstAddress.getCity() + " " +
+                        firstAddress.getStreet() + " " + firstAddress.getHouse() + " " + firstAddress.getBlock());
 
-        Assertions.assertEquals(objectMapper.writeValueAsString(byCountryAndCityAndStreetAndHouseAndBlock.get()),
+        Assertions.assertEquals(objectMapper.writeValueAsString(
+                        AddressConverter.toAddressDto.apply(byCountryAndCityAndStreetAndHouseAndBlock.get(0))
+                ),
                 mvcResult.getResponse().getContentAsString());
-        //.andExpect(result -> assertEquals(byCountryAndCityAndStreetAndHouseAndBlock,
-        //        result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to create address which already exists")
@@ -150,10 +194,9 @@ public class AddressControllerTests {
                 .andExpect(status().isConflict())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityExistsException))
-                .andExpect(result -> assertEquals("Address - Moldova Chisinau 31 August str. 21 A, exists!",
+                .andExpect(result -> assertEquals("Address - AddressDto(id=1, country=Moldova, city=Chisinau, street=31 August str., block=A, house=21, userId=0), already exists",
                         result.getResolvedException().getMessage()));
     }
-
     @DisplayName("Test that address was updated")
     @Test
     public void update_dataIsPresent_returnUpdatedDataId() throws Exception {
@@ -169,12 +212,14 @@ public class AddressControllerTests {
         Address address = addressRepository.save(firstAddress);
 
         firstAddress.setCity("Balti");
+        AddressDto addressDto = AddressConverter.toAddressDto.apply(firstAddress);
+
         mvc.perform(MockMvcRequestBuilders.patch("/address/" + address.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(firstAddress)))
+                        .content(objectMapper.writeValueAsString(addressDto)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(firstAddress), result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(addressDto), result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update address which not exist")

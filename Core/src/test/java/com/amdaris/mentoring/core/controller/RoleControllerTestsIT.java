@@ -1,7 +1,6 @@
 package com.amdaris.mentoring.core.controller;
 
 import com.amdaris.mentoring.core.CoreMicroservice;
-import com.amdaris.mentoring.core.model.Address;
 import com.amdaris.mentoring.core.model.Role;
 import com.amdaris.mentoring.core.repository.RoleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,14 +23,15 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = CoreMicroservice.class)
 @AutoConfigureMockMvc
-public class RoleControllerTests {
+public class RoleControllerTestsIT {
     @Autowired
     private RoleRepository roleRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();

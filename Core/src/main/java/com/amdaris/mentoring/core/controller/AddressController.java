@@ -1,6 +1,6 @@
 package com.amdaris.mentoring.core.controller;
 
-import com.amdaris.mentoring.core.model.Address;
+import com.amdaris.mentoring.core.dto.AddressDto;
 import com.amdaris.mentoring.core.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,16 +28,22 @@ public class AddressController {
         return ResponseEntity.ok(addressService.findById(id));
     }
 
+    @GetMapping(value = "/part/{filter}", produces = "application/json")
+    ResponseEntity<?> findByPartOfAddress(@PathVariable String filter) {
+        log.info("Try to get address by filter - {}", filter);
+        return ResponseEntity.ok(addressService.findByPartOfAddress(filter));
+    }
+
     @PostMapping(value = {"", "/"}, produces = "application/json")
-    ResponseEntity<?> create(@RequestBody Address address) {
-        log.info("Try to save new address with id - {}", address.getId());
-        return new ResponseEntity<>(addressService.save(address), HttpStatus.CREATED);
+    ResponseEntity<?> create(@RequestBody AddressDto addressDto) {
+        log.info("Try to save new address with id - {}", addressDto);
+        return new ResponseEntity<>(addressService.save(addressDto), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")
-    ResponseEntity<?> update(@RequestBody Address address, @PathVariable long id) {
-        log.info("Try to update address with id- {}", address.getId());
-        return new ResponseEntity<>(addressService.update(address, id), HttpStatus.CREATED);
+    ResponseEntity<?> update(@RequestBody AddressDto addressDto, @PathVariable long id) {
+        log.info("Try to update address with id- {}", id);
+        return new ResponseEntity<>(addressService.update(addressDto, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")

@@ -1,20 +1,19 @@
 package com.amdaris.mentoring.core.service;
 
-import com.amdaris.mentoring.core.model.Address;
+import com.amdaris.mentoring.core.dto.AddressDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AddressService {
-    List<Address> findAll();
+    List<AddressDto> findAll();
 
-    Optional<Address> findById(long id);
+    AddressDto findById(long id);
 
-    Optional<Address> findByAddress(String country, String city, String street, String house, String block);
+    List<AddressDto> findByPartOfAddress(String filter);
 
-    Address save(Address address);
+    AddressDto save(AddressDto address);
 
-    Address update(Address address, long id);
+    AddressDto update(AddressDto address, long id);
 
     long deleteById(long id);
 

@@ -1,26 +1,30 @@
 package com.amdaris.mentoring.core.service;
 
-import com.amdaris.mentoring.core.model.User;
+import com.amdaris.mentoring.core.dto.UserDto;
+import com.amdaris.mentoring.core.dto.criteria.UserSearchCriteria;
+import com.amdaris.mentoring.core.util.PageView;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
-    List<User> findAll();
+    List<UserDto> findAll();
 
-    Optional<User> findById(long id);
+    UserDto findById(long id);
 
-    User save(User user);
+    UserDto save(UserDto user);
 
-    User update(User user, long id);
+    UserDto update(UserDto user, long id);
 
     long deleteById(long id);
 
-    Optional<User> findByEmail(String email);
+    UserDto findByEmail(String email);
 
-    Optional<User> findByPhoneNumber(String phoneNumber);
+    UserDto findByPhoneNumber(String phoneNumber);
 
-    Optional<User> findLastName(String lastName);
+    List<UserDto> findByFullName(String fullName);
 
     void clear();
+
+    Page<UserDto> findByCriteria(PageView pageView, UserSearchCriteria criteria);
 }

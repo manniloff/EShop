@@ -28,6 +28,12 @@ CREATE TABLE role
     CONSTRAINT role_check CHECK (role_type IN ('ADMIN', 'CUSTOMER', 'MODERATOR'))
 );
 
+CREATE TABLE user_address_relation
+(
+    user_id BIGINT,
+    address_id  BIGINT
+);
+
 CREATE TABLE address
 (
     id      BIGINT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -36,7 +42,7 @@ CREATE TABLE address
     street  VARCHAR(255),
     block   VARCHAR(50),
     house   VARCHAR(50),
-    user_id BIGINT
+    full_address varchar(500) GENERATED ALWAYS AS(CONCAT(country,' ',city,' ',street,' ',house,' ',block)) NOT NULL UNIQUE
 );
 
 CREATE TABLE user
@@ -49,7 +55,7 @@ CREATE TABLE user
     phone_number VARCHAR(12),
     role_id      SMALLINT,
     password     VARCHAR(50),
-    birthday     TIMESTAMP(0),
+    birthday     DATE,
     full_name VARCHAR(200) GENERATED ALWAYS AS (CONCAT(first_name,' ',last_name)) VIRTUAL,
     CONSTRAINT fk_address FOREIGN KEY (address_id) REFERENCES address (id),
     CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES role (id)

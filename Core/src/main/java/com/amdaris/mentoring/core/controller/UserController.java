@@ -1,7 +1,10 @@
 package com.amdaris.mentoring.core.controller;
 
-import com.amdaris.mentoring.core.model.User;
+import com.amdaris.mentoring.core.dto.UserDto;
+import com.amdaris.mentoring.core.dto.criteria.UserSearchCriteria;
+import com.amdaris.mentoring.core.service.AddressService;
 import com.amdaris.mentoring.core.service.UserService;
+import com.amdaris.mentoring.core.util.PageView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+    private final AddressService addressService;
+
+    @GetMapping(value = "/filter", produces = "application/json")
+    ResponseEntity<?> findByCriteriaAll(PageView pageView, UserSearchCriteria criteria) {
+        log.info("Try to get list of products by criteria");
+        return ResponseEntity.ok(userService.findByCriteria(pageView, criteria));
+    }
 
     @GetMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> findAll() {
@@ -40,22 +51,22 @@ public class UserController {
         return ResponseEntity.ok(userService.findByPhoneNumber(phoneNumber));
     }
 
-    @GetMapping(value = "/lastname/{lastName}", produces = "application/json")
-    ResponseEntity<?> findByLastName(@PathVariable String lastName) {
-        log.info("Try to get user with lastName - {}", lastName);
-        return ResponseEntity.ok(userService.findLastName(lastName));
+    @GetMapping(value = "/fullName/{fullName}", produces = "application/json")
+    ResponseEntity<?> findByFullName(@PathVariable String fullName) {
+        log.info("Try to get user with fullName - {}", fullName);
+        return ResponseEntity.ok(userService.findByFullName(fullName));
     }
 
     @PostMapping(value = {"", "/"}, produces = "application/json")
-    ResponseEntity<?> create(@RequestBody User user) {
-        log.info("Try to save new user with phone number - {}", user.getPhoneNumber());
-        return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
+    ResponseEntity<?> create(@RequestBody UserDto userDto) {
+        log.info("Try to save new user with phone number - {}", userDto.getPhoneNumber());
+        return new ResponseEntity<>(userService.save(userDto), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")
-    ResponseEntity<?> update(@RequestBody User user, @PathVariable long id) {
-        log.info("Try to update user with phone number - {}", user.getPhoneNumber());
-        return new ResponseEntity<>(userService.update(user, id), HttpStatus.CREATED);
+    ResponseEntity<?> update(@RequestBody UserDto userDto, @PathVariable long id) {
+        log.info("Try to update user with phone number - {}", userDto.getPhoneNumber());
+        return new ResponseEntity<>(userService.update(userDto, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")

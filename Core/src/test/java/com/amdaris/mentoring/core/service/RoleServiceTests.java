@@ -12,7 +12,6 @@ import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 
 @SpringBootTest
 public class RoleServiceTests {
@@ -31,13 +30,13 @@ public class RoleServiceTests {
 
         Role customerRole = new Role();
         customerRole.setRoleType("CUSTOMER");
-        customerRole.setUsers(Set.of());
+        //customerRole.setUsers(Set.of());
 
         roleService.save(customerRole);
 
         Role adminRole = new Role();
         adminRole.setRoleType("ADMIN");
-        adminRole.setUsers(Set.of());
+        //adminRole.setUsers(Set.of());
 
         roleService.save(adminRole);
 
@@ -71,7 +70,7 @@ public class RoleServiceTests {
     public void findById_dataIsPresent_returnExistingData() {
         Role cusomerRole = new Role();
         cusomerRole.setRoleType("CUSTOMER");
-        cusomerRole.setUsers(Set.of());
+        //cusomerRole.setUsers(Set.of());
 
         roleService.save(cusomerRole);
 
@@ -94,7 +93,7 @@ public class RoleServiceTests {
     public void create_dataNoPresent_returnSavedDataId() {
         Role customerRole = new Role();
         customerRole.setRoleType("CUSTOMER");
-        customerRole.setUsers(Set.of());
+        //customerRole.setUsers(Set.of());
 
         roleService.save(customerRole);
 
@@ -109,7 +108,7 @@ public class RoleServiceTests {
     public void create_dataIsPresent_returnErrorMessage() {
         Role customerRole = new Role();
         customerRole.setRoleType("CUSTOMER");
-        customerRole.setUsers(Set.of());
+        //customerRole.setUsers(Set.of());
 
         roleService.save(customerRole);
 
@@ -123,7 +122,7 @@ public class RoleServiceTests {
     public void update_dataIsPresent_returnUpdatedDataId() {
         Role customerRole = new Role();
         customerRole.setRoleType("CUSTOMER");
-        customerRole.setUsers(Set.of());
+        //customerRole.setUsers(Set.of());
 
         roleService.save(customerRole);
 
@@ -142,7 +141,7 @@ public class RoleServiceTests {
     public void update_dataNoPresent_returnErrorMessage() {
         Role customerRole = new Role();
         customerRole.setRoleType("CUSTOMER");
-        customerRole.setUsers(Set.of());
+        //customerRole.setUsers(Set.of());
 
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class, () -> roleService.update(customerRole, (short) 1));
 
@@ -154,7 +153,7 @@ public class RoleServiceTests {
     public void deletedById_dataIsPresent_returnDeletedDataId() {
         Role customerRole = new Role();
         customerRole.setRoleType("CUSTOMER");
-        customerRole.setUsers(Set.of());
+        //customerRole.setUsers(Set.of());
 
         roleService.save(customerRole);
 

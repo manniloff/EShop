@@ -1,6 +1,6 @@
 package com.amdaris.mentoring.core.service;
 
-import com.amdaris.mentoring.core.model.Category;
+import com.amdaris.mentoring.core.dto.CategoryDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
 
 @SpringBootTest
 public class CategoryServiceTests {
@@ -29,12 +27,12 @@ public class CategoryServiceTests {
     public void findAll_dataIsPresent_returnAllData() {
         Assertions.assertEquals(0, categoryService.findAll().size());
 
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
 
         categoryService.save(vehicleCategory);
 
-        Category clothingCategory = new Category();
+        CategoryDto clothingCategory = new CategoryDto();
         clothingCategory.setTitle("Clothing");
 
         categoryService.save(clothingCategory);
@@ -45,15 +43,14 @@ public class CategoryServiceTests {
     @DisplayName("Test that found by title category from database")
     @Test
     public void findByTitle_dataIsPresent_returnExistingData() {
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
-        vehicleCategory.setProducts(Set.of());
 
         categoryService.save(vehicleCategory);
 
-        Optional<Category> foundByTitle = categoryService.findByTitle(vehicleCategory.getTitle());
+        CategoryDto foundByTitle = categoryService.findByTitle(vehicleCategory.getTitle());
 
-        Assertions.assertEquals(Optional.of(vehicleCategory), foundByTitle);
+        Assertions.assertEquals(vehicleCategory.getTitle(), foundByTitle.getTitle());
     }
 
     @DisplayName("Test that found by title category throws error when didn't found any item")
@@ -68,15 +65,14 @@ public class CategoryServiceTests {
     @DisplayName("Test that found by id category from database")
     @Test
     public void findById_dataIsPresent_returnExistingData() {
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
 
-        categoryService.save(vehicleCategory);
+        CategoryDto save = categoryService.save(vehicleCategory);
 
-        Optional<Category> foundByTitle = categoryService.findByTitle("Vehicle");
-        Optional<Category> category = categoryService.findById((foundByTitle.get().getId()));
+        CategoryDto category = categoryService.findById(save.getId());
 
-        Assertions.assertEquals(vehicleCategory.getTitle(), category.get().getTitle());
+        Assertions.assertEquals(vehicleCategory.getTitle(), category.getTitle());
     }
 
     @DisplayName("Test that found by id category throws error when didn't found any item")
@@ -91,12 +87,12 @@ public class CategoryServiceTests {
     @DisplayName("Test that category was saved in database")
     @Test
     public void create_dataNoPresent_returnSavedDataId() {
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
 
         categoryService.save(vehicleCategory);
 
-        List<Category> categories = categoryService.findAll();
+        List<CategoryDto> categories = categoryService.findAll();
 
         Assertions.assertEquals(1, categories.size());
         Assertions.assertEquals("Vehicle", categories.get(0).getTitle());
@@ -105,12 +101,12 @@ public class CategoryServiceTests {
     @DisplayName("Test that save category throws error when item already exists")
     @Test
     public void create_dataIsPresent_returnErrorMessage() {
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
 
         categoryService.save(vehicleCategory);
 
-        Category repeateVehicleCategory = new Category();
+        CategoryDto repeateVehicleCategory = new CategoryDto();
         repeateVehicleCategory.setTitle("Vehicle");
 
         EntityExistsException exception = Assertions.assertThrows(EntityExistsException.class,
@@ -122,25 +118,21 @@ public class CategoryServiceTests {
     @DisplayName("Test that category was updated in database")
     @Test
     public void update_dataIsPresent_returnUpdatedDataId() {
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
 
-        categoryService.save(vehicleCategory);
-
-        short categoryId = categoryService.findByTitle(vehicleCategory.getTitle()).get().getId();
+        CategoryDto category = categoryService.save(vehicleCategory);
 
         vehicleCategory.setTitle("Vehicle Updated");
-        categoryService.update(vehicleCategory, categoryId);
+        CategoryDto update = categoryService.update(vehicleCategory, category.getId());
 
-        Optional<Category> updatedCategory = categoryService.findById(categoryId);
-
-        Assertions.assertEquals("Vehicle Updated", updatedCategory.get().getTitle());
+        Assertions.assertEquals("Vehicle Updated", update.getTitle());
     }
 
     @DisplayName("Test that update category throws error when didn't found any item")
     @Test
     public void update_dataNoPresent_returnErrorMessage() {
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
 
         NoSuchElementException exception = Assertions.assertThrows(NoSuchElementException.class,
@@ -152,12 +144,12 @@ public class CategoryServiceTests {
     @DisplayName("Test that category was deleted from database")
     @Test
     public void deletedById_dataIsPresent_returnDeletedDataId() {
-        Category vehicleCategory = new Category();
+        CategoryDto vehicleCategory = new CategoryDto();
         vehicleCategory.setTitle("Vehicle");
 
         categoryService.save(vehicleCategory);
 
-        List<Category> categories = categoryService.findAll();
+        List<CategoryDto> categories = categoryService.findAll();
         Assertions.assertEquals(1, categories.size());
         categoryService.deleteById(categories.get(0).getId());
 
