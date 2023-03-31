@@ -15,14 +15,18 @@ import java.util.Set;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @ToString
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NonNull
-    private short id;
-    private String title;
+public class Address {
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories", cascade = {
+    @Id
+    @NonNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String country;
+    private String city;
+    private String street;
+    private String block;
+    private String house;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "addresses", cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE,
             CascadeType.DETACH
@@ -30,5 +34,5 @@ public class Category {
     @JsonIgnoreProperties("categories")
     @EqualsAndHashCode.Exclude
     @JsonIgnore
-    private Set<Product> products = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 }

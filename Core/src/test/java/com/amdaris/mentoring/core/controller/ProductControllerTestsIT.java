@@ -1,11 +1,13 @@
 package com.amdaris.mentoring.core.controller;
 
 import com.amdaris.mentoring.core.CoreMicroservice;
-import com.amdaris.mentoring.core.model.Category;
+import com.amdaris.mentoring.core.dto.ProductDto;
+import com.amdaris.mentoring.core.dto.converter.ProductConverter;
 import com.amdaris.mentoring.core.model.Product;
 import com.amdaris.mentoring.core.repository.ProductRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = CoreMicroservice.class)
 @AutoConfigureMockMvc
-public class ProductControllerTests {
+public class ProductControllerTestsIT {
     @Autowired
     private ProductRepository productRepository;
 
@@ -46,19 +50,22 @@ public class ProductControllerTests {
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short)0);
+        vehicleProduct.setSale((short) 0);
         vehicleProduct.setCategories(Set.of());
 
         Product clothingProduct = new Product();
         clothingProduct.setTitle("Clothing");
         clothingProduct.setDescription("Clothing product");
         clothingProduct.setPrice(150.0);
-        clothingProduct.setSale((short)0);
+        clothingProduct.setSale((short) 0);
         clothingProduct.setCategories(Set.of());
 
-        List<Product> products = List.of(vehicleProduct, clothingProduct);
+        productRepository.saveAll(List.of(vehicleProduct, clothingProduct));
 
-        productRepository.saveAll(products);
+        List<ProductDto> products = productRepository.findAllByTitleContaining("l")
+                .stream()
+                .map(product -> ProductConverter.toProductDto.apply(product))
+                .collect(Collectors.toList());
 
         mvc.perform(MockMvcRequestBuilders.get("/product")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -77,16 +84,16 @@ public class ProductControllerTests {
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short)0);
+        vehicleProduct.setSale((short) 0);
         vehicleProduct.setCategories(Set.of());
 
-        Product product = productRepository.save(vehicleProduct);
+        ProductDto product = ProductConverter.toProductDto.apply(productRepository.save(vehicleProduct));
 
         mvc.perform(MockMvcRequestBuilders.get("/product/" + product.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(vehicleProduct),
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(product),
                         result.getResponse().getContentAsString()));
     }
 
@@ -112,15 +119,20 @@ public class ProductControllerTests {
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short)0);
+        vehicleProduct.setSale((short) 0);
         vehicleProduct.setCategories(Set.of());
 
-        mvc.perform(MockMvcRequestBuilders.post("/product")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(vehicleProduct)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals("Created", result.getResponse().getContentAsString()));
+                .andReturn();
+
+        ProductDto byTitle = ProductConverter.toProductDto.apply(
+                productRepository.findByTitle(vehicleProduct.getTitle()).get());
+
+        Assertions.assertEquals(objectMapper.writeValueAsString(byTitle), mvcResult.getResponse().getContentAsString());
     }
 
     @DisplayName("Test that exception throws when try to create product which already exists")
@@ -132,7 +144,7 @@ public class ProductControllerTests {
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short)0);
+        vehicleProduct.setSale((short) 0);
         vehicleProduct.setCategories(Set.of());
 
         productRepository.save(vehicleProduct);
@@ -156,18 +168,19 @@ public class ProductControllerTests {
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short)0);
+        vehicleProduct.setSale((short) 0);
         vehicleProduct.setCategories(Set.of());
 
-        Product product = productRepository.save(vehicleProduct);
+        ProductDto product = ProductConverter.toProductDto.apply(productRepository.save(vehicleProduct));
 
-        vehicleProduct.setTitle("Vehicle updated");
+        product.setTitle("Vehicle updated");
         mvc.perform(MockMvcRequestBuilders.patch("/product/" + product.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(vehicleProduct)))
+                        .content(objectMapper.writeValueAsString(product)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(vehicleProduct), result.getResponse().getContentAsString()));
+                .andExpect(result -> assertEquals(objectMapper.writeValueAsString(product),
+                        result.getResponse().getContentAsString()));
     }
 
     @DisplayName("Test that exception throws when try to update product which not exist")
@@ -179,7 +192,7 @@ public class ProductControllerTests {
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short)0);
+        vehicleProduct.setSale((short) 0);
         vehicleProduct.setCategories(Set.of());
 
         mvc.perform(MockMvcRequestBuilders.patch("/product/1")
@@ -201,7 +214,7 @@ public class ProductControllerTests {
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short)0);
+        vehicleProduct.setSale((short) 0);
         vehicleProduct.setCategories(Set.of());
 
         Product product = productRepository.save(vehicleProduct);

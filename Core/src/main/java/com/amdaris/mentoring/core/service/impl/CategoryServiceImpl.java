@@ -1,5 +1,7 @@
 package com.amdaris.mentoring.core.service.impl;
 
+import com.amdaris.mentoring.core.dto.CategoryDto;
+import com.amdaris.mentoring.core.dto.converter.CategoryConverter;
 import com.amdaris.mentoring.core.model.Category;
 import com.amdaris.mentoring.core.repository.CategoryRepository;
 import com.amdaris.mentoring.core.service.CategoryService;
@@ -8,10 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,37 +22,40 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> findAll() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(category -> CategoryConverter.toCategoryDto.apply(category))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Category> findById(Short id) {
+    public CategoryDto findById(short id) {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isPresent()) {
-            return category;
+            return CategoryConverter.toCategoryDto.apply(category.get());
         }
         throw new NoSuchElementException("Category with id - " + id + " doesn't exist!");
     }
 
     @Override
-    public Short save(Category category) {
-        Optional<Category> byTitle = categoryRepository.findByTitle(category.getTitle());
+    public CategoryDto save(CategoryDto categoryDto) {
+        Optional<Category> byTitle = categoryRepository.findByTitle(categoryDto.getTitle());
 
         if (byTitle.isPresent()) {
-            throw new EntityExistsException("Category with title - " + category.getTitle() + ", exists!");
+            throw new EntityExistsException("Category with title - " + categoryDto.getTitle() + ", exists!");
         }
-
-        return categoryRepository.save(category).getId();
+        Category category = CategoryConverter.toCategory.apply(categoryDto);
+        return CategoryConverter.toCategoryDto.apply(categoryRepository.save(category));
     }
 
     @Override
-    public Category update(Category category, short id) {
+    public CategoryDto update(CategoryDto categoryDto, short id) {
         Optional<Category> byId = categoryRepository.findById(id);
-
+        Category category = CategoryConverter.toCategory.apply(categoryDto);
         if (byId.isPresent()) {
-            return categoryRepository.save(category);
+            return CategoryConverter.toCategoryDto.apply(categoryRepository.save(category));
         }
         throw new NoSuchElementException("Category with id - " + id + " doesn't exist!");
     }
@@ -67,10 +72,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<Category> findByTitle(String title) {
+    public CategoryDto findByTitle(String title) {
         Optional<Category> category = categoryRepository.findByTitle(title);
         if (category.isPresent()) {
-            return category;
+            return CategoryConverter.toCategoryDto.apply(category.get());
         } else {
             throw new NoSuchElementException("Category with title - " + title + " doesn't exist!");
         }

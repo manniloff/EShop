@@ -1,7 +1,9 @@
 package com.amdaris.mentoring.core.controller;
 
-import com.amdaris.mentoring.core.model.Product;
+import com.amdaris.mentoring.core.dto.ProductDto;
+import com.amdaris.mentoring.core.dto.criteria.ProductSearchCriteria;
 import com.amdaris.mentoring.core.service.ProductService;
+import com.amdaris.mentoring.core.util.PageView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+
+    @GetMapping(value = "/filter", produces = "application/json")
+    ResponseEntity<?> findByCriteriaAll(PageView pageView, ProductSearchCriteria criteria) {
+        log.info("Try to get list of products by criteria");
+        return ResponseEntity.ok(productService.findByCriteria(pageView, criteria));
+    }
 
     @GetMapping(value = {"", "/"}, produces = "application/json")
     ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") Integer pageNo,
@@ -41,16 +49,15 @@ public class ProductController {
     }
 
     @PostMapping(value = {"", "/"}, produces = "application/json")
-    ResponseEntity<?> create(@RequestBody Product product) {
-        log.info("Try to save new product with title - {}", product.getTitle());
-        productService.save(product);
-        return new ResponseEntity<>("Created", HttpStatus.CREATED);
+    ResponseEntity<?> create(@RequestBody ProductDto productDto) {
+        log.info("Try to save new product with title - {}", productDto.getTitle());
+        return new ResponseEntity<>(productService.save(productDto), HttpStatus.CREATED);
     }
 
     @PatchMapping(value = "/{id}", produces = "application/json")
-    ResponseEntity<?> update(@RequestBody Product product, @PathVariable long id) {
-        log.info("Try to update product with title - {}", product.getTitle());
-        return new ResponseEntity<>(productService.update(product, id), HttpStatus.CREATED);
+    ResponseEntity<?> update(@RequestBody ProductDto productDto, @PathVariable long id) {
+        log.info("Try to update product with title - {}", productDto.getTitle());
+        return new ResponseEntity<>(productService.update(productDto, id), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/{id}", produces = "application/json")
