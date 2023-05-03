@@ -6,6 +6,7 @@ import com.amdaris.mentoring.core.dto.criteria.UserSearchCriteria;
 import com.amdaris.mentoring.core.model.User;
 import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.amdaris.mentoring.core.repository.UserRepository;
+import com.amdaris.mentoring.core.service.BucketService;
 import com.amdaris.mentoring.core.service.UserService;
 import com.amdaris.mentoring.core.util.PageView;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final AddressRepository addressRepository;
+
+    private final BucketService bucketService;
 
     @Override
     public Page<UserDto> findByCriteria(PageView pageView, UserSearchCriteria criteria) {
@@ -66,8 +69,9 @@ public class UserServiceImpl implements UserService {
         if (findByEmail.isPresent()) {
             throw new EntityExistsException("User with email - " + userDto.getEmail() + ", exists!");
         }
-        User user = UserConverter.toUser.apply(userDto);
-        return UserConverter.toUserDto.apply(userRepository.save(user));
+        User user = userRepository.save(UserConverter.toUser.apply(userDto));
+        bucketService.save(user.getId());
+        return UserConverter.toUserDto.apply(user);
     }
 
     @Override

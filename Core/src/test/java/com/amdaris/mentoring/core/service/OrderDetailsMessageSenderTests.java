@@ -36,12 +36,10 @@ public class OrderDetailsMessageSenderTests {
         ProductDetails secondProductDetails = new ProductDetails();
         secondProductDetails.setTitle("Product2");
         secondProductDetails.setCount(1);
-        secondProductDetails.setPrice(30.0);
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1);
         orderDetails.setProductDetails(List.of(firstProductDetails, secondProductDetails));
-        orderDetails.setShippingPrice(10.0);
 
         kafkaMessageSender.send(orderDetails);
 

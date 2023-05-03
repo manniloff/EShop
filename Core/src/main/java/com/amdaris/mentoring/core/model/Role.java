@@ -23,7 +23,7 @@ public class Role {
 
     private String roleType;
 
-    @OneToMany(mappedBy = "role", orphanRemoval = true)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("role")
     @JsonIgnore
     private Set<User> users = new HashSet<>();

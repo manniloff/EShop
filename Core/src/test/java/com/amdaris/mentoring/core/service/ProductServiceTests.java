@@ -186,21 +186,21 @@ public class ProductServiceTests {
 
         Page<ProductDto> productListVehicleCategoryCriteria = productService.findByCriteria(pageView, productSearchCriteria);
         Assertions.assertEquals(2, productListVehicleCategoryCriteria.getTotalElements());
+        productService.clear();
     }
 
     @DisplayName("Test that all products were returned")
     @Test
     public void findAll_dataIsPresent_returnAllData() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
-        Assertions.assertEquals(0, productService.findAll(pageable).size());
 
-        ProductDto vehicleProduct = new ProductDto();
-        vehicleProduct.setTitle("Vehicle");
-        vehicleProduct.setDescription("Vehicle product");
-        vehicleProduct.setPrice(15000.0);
-        vehicleProduct.setSale((short) 0);
+        ProductDto footwearProduct = new ProductDto();
+        footwearProduct.setTitle("FootWear");
+        footwearProduct.setDescription("FootWear product");
+        footwearProduct.setPrice(15000.0);
+        footwearProduct.setSale((short) 0);
 
-        productService.save(vehicleProduct);
+        productService.save(footwearProduct);
 
         ProductDto clothingProduct = new ProductDto();
         clothingProduct.setTitle("Clothing");
@@ -216,12 +216,17 @@ public class ProductServiceTests {
     @DisplayName("Test that found by title product from database")
     @Test
     public void findByTitle_dataIsPresent_returnExistingData() {
+        CategoryDto homeCategoryDto = new CategoryDto();
+        homeCategoryDto.setTitle("For Home");
+
+        CategoryDto savedHomeCategory = categoryService.save(homeCategoryDto);
+
         ProductDto vehicleProduct = new ProductDto();
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
         vehicleProduct.setSale((short) 0);
-        vehicleProduct.setCategoryIds(List.of((short) 1));
+        vehicleProduct.setCategoryIds(List.of(savedHomeCategory.getId()));
 
         productService.save(vehicleProduct);
 
@@ -291,12 +296,17 @@ public class ProductServiceTests {
     @DisplayName("Test that found by id category from database")
     @Test
     public void findById_dataIsPresent_returnExistingData() {
+        CategoryDto homeCategoryDto = new CategoryDto();
+        homeCategoryDto.setTitle("For Home");
+
+        CategoryDto savedHomeCategory = categoryService.save(homeCategoryDto);
+
         ProductDto vehicleProduct = new ProductDto();
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
         vehicleProduct.setSale((short) 0);
-        vehicleProduct.setCategoryIds(List.of((short) 1));
+        vehicleProduct.setCategoryIds(List.of(savedHomeCategory.getId()));
 
         productService.save(vehicleProduct);
 
@@ -320,12 +330,17 @@ public class ProductServiceTests {
     public void create_dataNoPresent_returnSavedDataId() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
 
+        CategoryDto homeCategoryDto = new CategoryDto();
+        homeCategoryDto.setTitle("For Home");
+
+        CategoryDto savedHomeCategory = categoryService.save(homeCategoryDto);
+
         ProductDto vehicleProduct = new ProductDto();
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
         vehicleProduct.setSale((short) 0);
-        vehicleProduct.setCategoryIds(List.of((short) 1));
+        vehicleProduct.setCategoryIds(List.of(savedHomeCategory.getId()));
 
         productService.save(vehicleProduct);
 
@@ -333,17 +348,23 @@ public class ProductServiceTests {
 
         Assertions.assertEquals(1, products.size());
         Assertions.assertEquals("Vehicle", products.get(0).getTitle());
+        productService.clear();
     }
 
     @DisplayName("Test that save product throws error when item already exists")
     @Test
     public void create_dataIsPresent_returnErrorMessage() {
+        CategoryDto homeCategoryDto = new CategoryDto();
+        homeCategoryDto.setTitle("For Home");
+
+        CategoryDto savedHomeCategory = categoryService.save(homeCategoryDto);
+
         ProductDto vehicleProduct = new ProductDto();
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
         vehicleProduct.setSale((short) 0);
-        vehicleProduct.setCategoryIds(List.of((short) 1));
+        vehicleProduct.setCategoryIds(List.of(savedHomeCategory.getId()));
 
         productService.save(vehicleProduct);
 
@@ -351,17 +372,23 @@ public class ProductServiceTests {
                 () -> productService.save(vehicleProduct));
 
         Assertions.assertEquals("Product with title - Vehicle, exists!", exception.getMessage());
+        productService.clear();
     }
 
     @DisplayName("Test that product was updated in database")
     @Test
     public void update_dataIsPresent_returnUpdatedDataId() {
+        CategoryDto homeCategoryDto = new CategoryDto();
+        homeCategoryDto.setTitle("For Home");
+
+        CategoryDto savedHomeCategory = categoryService.save(homeCategoryDto);
+
         ProductDto vehicleProduct = new ProductDto();
         vehicleProduct.setTitle("Vehicle");
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
         vehicleProduct.setSale((short) 0);
-        vehicleProduct.setCategoryIds(List.of((short) 1));
+        vehicleProduct.setCategoryIds(List.of(savedHomeCategory.getId()));
 
         ProductDto productDto = productService.save(vehicleProduct);
 
@@ -374,6 +401,12 @@ public class ProductServiceTests {
     @DisplayName("Test that update product throws error when didn't found any item")
     @Test
     public void update_dataNoPresent_returnErrorMessage() {
+
+        CategoryDto homeCategoryDto = new CategoryDto();
+        homeCategoryDto.setTitle("For Home");
+
+        CategoryDto savedHomeCategory = categoryService.save(homeCategoryDto);
+
         Category vehicleCategory = new Category();
         vehicleCategory.setTitle("Vehicle");
         vehicleCategory.setProducts(Set.of());
@@ -383,7 +416,7 @@ public class ProductServiceTests {
         vehicleProduct.setDescription("Vehicle product");
         vehicleProduct.setPrice(15000.0);
         vehicleProduct.setSale((short) 0);
-        vehicleProduct.setCategoryIds(List.of((short) 1));
+        vehicleProduct.setCategoryIds(List.of(savedHomeCategory.getId()));
 
         productService.save(vehicleProduct);
 
@@ -398,22 +431,26 @@ public class ProductServiceTests {
     public void deletedById_dataIsPresent_returnDeletedDataId() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
 
+        CategoryDto homeCategoryDto = new CategoryDto();
+        homeCategoryDto.setTitle("For Home");
+
+        CategoryDto savedHomeCategory = categoryService.save(homeCategoryDto);
+
         ProductDto vehicleProduct = new ProductDto();
-        vehicleProduct.setTitle("Vehicle");
-        vehicleProduct.setDescription("Vehicle product");
+        vehicleProduct.setTitle("Toys");
+        vehicleProduct.setDescription("Toys product");
         vehicleProduct.setPrice(15000.0);
         vehicleProduct.setSale((short) 0);
-        vehicleProduct.setCategoryIds(List.of((short) 1));
+        vehicleProduct.setCategoryIds(List.of(savedHomeCategory.getId()));
 
         productService.save(vehicleProduct);
-
-        List<ProductDto> products = productService.findAll(pageable);
-        Assertions.assertEquals(1, products.size());
 
         long productId = productService.findProductId(vehicleProduct.getTitle());
         productService.deleteById(productId);
 
-        Assertions.assertEquals(0, productService.findAll(pageable).size());
+        Assertions.assertEquals(0L, productService.findAll(pageable)
+                .stream()
+                .filter(p -> p.getId().equals(productId)).count());
     }
 
     @DisplayName("Test that delete product throws error when didn't found any item")

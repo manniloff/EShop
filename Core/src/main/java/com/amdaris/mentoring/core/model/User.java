@@ -26,7 +26,11 @@ public class User {
     @Email
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
+            CascadeType.MERGE,
+            CascadeType.DETACH,
+            CascadeType.REMOVE
+    })
     @JoinTable(
             name = "user_address_relation",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
