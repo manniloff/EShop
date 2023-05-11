@@ -3,8 +3,8 @@ package com.amdaris.mentoring.core.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
+import jakarta.persistence.*;
+//import javax.validation.constraints.Email;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Email
+    //@Email
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)

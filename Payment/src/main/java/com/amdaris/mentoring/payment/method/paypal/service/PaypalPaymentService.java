@@ -1,6 +1,5 @@
 package com.amdaris.mentoring.payment.method.paypal.service;
 
-import com.amdaris.mentoring.common.model.ProductDetails;
 import com.amdaris.mentoring.payment.method.OrderPaymentService;
 import com.amdaris.mentoring.payment.method.paypal.model.PaypalPaymentOrder;
 import com.amdaris.mentoring.payment.model.PaymentDetails;
@@ -31,11 +30,8 @@ public class PaypalPaymentService implements OrderPaymentService<Payment, Paypal
 
     @Override
     public String payOrder(PaymentDetails orderPaymentDetails) throws Exception {
-        double total = orderPaymentDetails.getOrderDetails()
-                .getProductDetails()
-                .stream()
-                .map(ProductDetails::getPrice)
-                .reduce(0.0, Double::sum) + orderPaymentDetails.getOrderDetails().getShippingPrice();
+        double total = 100.0;
+        //TODO review in next task where implemented business logic for Order
 
         PaypalPaymentOrder paypalPaymentOrder = new PaypalPaymentOrder();
         paypalPaymentOrder.setTotal(total);

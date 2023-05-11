@@ -68,8 +68,6 @@ class ExternalPaymentMessageServiceTests {
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1);
-        orderDetails.setProductDetails(List.of(firstProductDetails,secondProductDetails));
-        orderDetails.setShippingPrice(10.0);
 
         externalMessageTestConfiguration.externalMessageService().send(topic, orderDetails);
 

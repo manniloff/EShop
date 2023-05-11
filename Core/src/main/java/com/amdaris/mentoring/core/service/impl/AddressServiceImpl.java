@@ -5,11 +5,11 @@ import com.amdaris.mentoring.core.dto.converter.AddressConverter;
 import com.amdaris.mentoring.core.model.Address;
 import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.amdaris.mentoring.core.service.AddressService;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

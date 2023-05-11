@@ -8,13 +8,13 @@ import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.amdaris.mentoring.core.repository.UserRepository;
 import com.amdaris.mentoring.core.service.UserService;
 import com.amdaris.mentoring.core.util.PageView;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

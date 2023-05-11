@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/Gateway2/src/main/resources/archetype-resources" includeSubdirectories="true" />
+    </excludeFromCompile>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Discovery" />
-        <module name="mentoring-common-module-starter" />
         <module name="Payment" />
         <module name="Gateway" />
+        <module name="Discovery" />
+        <module name="mentoring-common-module-starter" />
+        <module name="Shipment" />
         <module name="Core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Gateway (1)" target="11" />
       <module name="Gateway (2)" target="11" />
+      <module name="Gateway2" target="1.5" />
       <module name="Shipment (1)" target="11" />
       <module name="Shipment (2)" target="11" />
     </bytecodeTargetLevel>
