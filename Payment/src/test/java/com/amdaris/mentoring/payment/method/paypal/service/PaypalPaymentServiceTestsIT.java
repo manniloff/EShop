@@ -17,8 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = PaymentMicroservice.class)
 @AutoConfigureMockMvc
@@ -56,8 +54,8 @@ public class PaypalPaymentServiceTestsIT {
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1L);
-        orderDetails.setProductDetails(List.of(fristProductDetails, secondProductDetails));
-        orderDetails.setShippingPrice(20);
+        //orderDetails.setProductDetails(List.of(fristProductDetails, secondProductDetails));
+        //orderDetails.setShippingPrice(20);
 
         PaymentDetails orderPaymentDetails = new PaymentDetails();
 
@@ -86,8 +84,7 @@ public class PaypalPaymentServiceTestsIT {
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1L);
-        orderDetails.setProductDetails(List.of(fristProductDetails, secondProductDetails));
-        orderDetails.setShippingPrice(20);
+        //TODO review in next task where implemented business logic for Order
 
         PaymentDetails orderPaymentDetails = new PaymentDetails();
 
@@ -96,11 +93,8 @@ public class PaypalPaymentServiceTestsIT {
         orderPaymentDetails.setCurrency("USD");
         orderPaymentDetails.setMethod("paypal");
 
-        double total = orderPaymentDetails.getOrderDetails()
-                .getProductDetails()
-                .stream()
-                .map(ProductDetails::getPrice)
-                .reduce(0.0, Double::sum) + orderPaymentDetails.getOrderDetails().getShippingPrice();
+        double total = 100.0;
+        //TODO review in next task where implemented business logic for Order
 
         PaypalPaymentOrder paypalPaymentOrder = new PaypalPaymentOrder();
         paypalPaymentOrder.setTotal(total);

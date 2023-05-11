@@ -6,6 +6,7 @@ import com.amdaris.mentoring.core.dto.converter.AddressConverter;
 import com.amdaris.mentoring.core.model.Address;
 import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityExistsException;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -197,6 +197,7 @@ public class AddressControllerTestsIT {
                 .andExpect(result -> assertEquals("Address - AddressDto(id=1, country=Moldova, city=Chisinau, street=31 August str., block=A, house=21, userId=0), already exists",
                         result.getResolvedException().getMessage()));
     }
+
     @DisplayName("Test that address was updated")
     @Test
     public void update_dataIsPresent_returnUpdatedDataId() throws Exception {

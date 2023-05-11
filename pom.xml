@@ -20,6 +20,7 @@
         <module>Payment</module>
         <module>Shipment</module>
         <module>common-module</module>
+        <module>Gateway</module>
     </modules>
 
     <build>
