@@ -1,5 +1,6 @@
 package com.amdaris.mentoring.core.model;
 
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

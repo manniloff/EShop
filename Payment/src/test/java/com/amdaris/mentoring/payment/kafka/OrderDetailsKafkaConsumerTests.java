@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-
 @Import(ExternalMessageTestConfiguration.class)
 @SpringBootTest
 public class OrderDetailsKafkaConsumerTests {
@@ -46,8 +44,6 @@ public class OrderDetailsKafkaConsumerTests {
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1);
-        orderDetails.setProductDetails(List.of(firstProductDetails, secondProductDetails));
-        orderDetails.setShippingPrice(10.0);
 
         externalMessageTestConfiguration.externalMessageService().send(topic, orderDetails);
 

@@ -17,7 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import javax.persistence.EntityExistsException;
+import jakarta.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;

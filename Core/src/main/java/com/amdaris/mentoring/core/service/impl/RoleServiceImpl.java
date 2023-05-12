@@ -3,11 +3,11 @@ package com.amdaris.mentoring.core.service.impl;
 import com.amdaris.mentoring.core.model.Role;
 import com.amdaris.mentoring.core.repository.RoleRepository;
 import com.amdaris.mentoring.core.service.RoleService;
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
