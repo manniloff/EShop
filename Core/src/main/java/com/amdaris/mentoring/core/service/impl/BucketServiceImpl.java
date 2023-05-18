@@ -5,10 +5,10 @@ import com.amdaris.mentoring.core.dto.converter.BucketConverter;
 import com.amdaris.mentoring.core.model.Bucket;
 import com.amdaris.mentoring.core.repository.BucketRepository;
 import com.amdaris.mentoring.core.service.BucketService;
+import javax.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

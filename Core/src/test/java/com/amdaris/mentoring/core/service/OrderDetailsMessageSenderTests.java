@@ -39,7 +39,7 @@ public class OrderDetailsMessageSenderTests {
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1);
-        orderDetails.setProductDetails(List.of(firstProductDetails, secondProductDetails));
+        orderDetails.setProducts(List.of(firstProductDetails, secondProductDetails));
 
         kafkaMessageSender.send(orderDetails);
 

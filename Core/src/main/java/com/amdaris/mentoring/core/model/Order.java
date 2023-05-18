@@ -1,9 +1,9 @@
 package com.amdaris.mentoring.core.model;
 
 import com.amdaris.mentoring.core.util.OrderStatus;
+import javax.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;

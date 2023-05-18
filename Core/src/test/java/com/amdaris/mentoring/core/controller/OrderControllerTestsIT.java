@@ -1,7 +1,8 @@
 package com.amdaris.mentoring.core.controller;
 
-import com.amdaris.mentoring.common.model.OrderDetails;
+
 import com.amdaris.mentoring.common.model.ProductDetails;
+import com.amdaris.mentoring.common.model.OrderDetails;
 import com.amdaris.mentoring.core.CoreMicroservice;
 import com.amdaris.mentoring.core.dto.OrderDto;
 import com.amdaris.mentoring.core.dto.converter.OrderConverter;
@@ -11,6 +12,7 @@ import com.amdaris.mentoring.core.util.OrderStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import javax.persistence.EntityExistsException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -25,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import javax.persistence.EntityExistsException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -79,7 +80,7 @@ public class OrderControllerTestsIT {
                 .map(OrderConverter.toOrderDto)
                 .collect(Collectors.toList());
 
-        mvc.perform(MockMvcRequestBuilders.get("/order")
+        mvc.perform(MockMvcRequestBuilders.get("/core/order")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -102,7 +103,7 @@ public class OrderControllerTestsIT {
 
         OrderDto orderDto = OrderConverter.toOrderDto.apply(orderRepository.save(firstOrder));
 
-        mvc.perform(MockMvcRequestBuilders.get("/order/" + orderDto.getId())
+        mvc.perform(MockMvcRequestBuilders.get("/core/order/" + orderDto.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -115,7 +116,7 @@ public class OrderControllerTestsIT {
     public void findById_dataNoPresent_returnErrorMessage() throws Exception {
         orderRepository.deleteAll();
 
-        mvc.perform(MockMvcRequestBuilders.get("/order/1")
+        mvc.perform(MockMvcRequestBuilders.get("/core/order/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NoSuchElementException))
@@ -138,7 +139,7 @@ public class OrderControllerTestsIT {
 
         OrderDto orderDto = OrderConverter.toOrderDto.apply(firstOrder);
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/order")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/core/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderDto)))
                 .andExpect(status().isCreated())
@@ -165,7 +166,7 @@ public class OrderControllerTestsIT {
 
         orderRepository.save(firstOrder);
 
-        mvc.perform(MockMvcRequestBuilders.post("/order")
+        mvc.perform(MockMvcRequestBuilders.post("/core/order")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(firstOrder)))
                 .andExpect(status().isConflict())
@@ -191,7 +192,7 @@ public class OrderControllerTestsIT {
         OrderDto order = OrderConverter.toOrderDto.apply(orderRepository.save(firstOrder));
 
         order.setStatus("paid");
-        mvc.perform(MockMvcRequestBuilders.patch("/order/" + order.getTransId())
+        mvc.perform(MockMvcRequestBuilders.patch("/core/order/" + order.getTransId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(order)))
                 .andExpect(status().isCreated())
@@ -215,7 +216,7 @@ public class OrderControllerTestsIT {
 
         OrderDto order = OrderConverter.toOrderDto.apply(firstOrder);
 
-        mvc.perform(MockMvcRequestBuilders.patch("/order/" + transId)
+        mvc.perform(MockMvcRequestBuilders.patch("/core/order/" + transId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(order)))
                 .andExpect(status().isNotFound())
@@ -240,7 +241,7 @@ public class OrderControllerTestsIT {
 
         Order order = orderRepository.save(firstOrder);
 
-        mvc.perform(MockMvcRequestBuilders.delete("/order/" + order.getId())
+        mvc.perform(MockMvcRequestBuilders.delete("/core/order/" + order.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -253,7 +254,7 @@ public class OrderControllerTestsIT {
     public void deletedById_dataNoPresent_returnErrorMessage() throws Exception {
         orderRepository.deleteAll();
 
-        mvc.perform(MockMvcRequestBuilders.delete("/order/" + 1L)
+        mvc.perform(MockMvcRequestBuilders.delete("/core/order/" + 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
@@ -262,7 +263,8 @@ public class OrderControllerTestsIT {
                         result.getResolvedException().getMessage()));
     }
 
-    @DisplayName("Test that was got order detail message and sent to kafka")
+    //TODO uncomment when kafka will be implemented
+    /*@DisplayName("Test that was got order detail message and sent to kafka")
     @Test
     public void testThatWasGotOrderDetailsMessageAndSentToKafka() throws Exception {
         ProductDetails firstProductDetails = new ProductDetails();
@@ -276,14 +278,14 @@ public class OrderControllerTestsIT {
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1);
-        orderDetails.setProductDetails(List.of(firstProductDetails, secondProductDetails));
+        orderDetails.setProducts(List.of(firstProductDetails, secondProductDetails));
 
-        mvc.perform(MockMvcRequestBuilders.post("/order/send/to/pay")
+        mvc.perform(MockMvcRequestBuilders.post("/core/order/send/to/pay")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderDetails)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                 .andExpect(result -> assertEquals("message was sent to kafka",
                         result.getResponse().getContentAsString()));
-    }
+    }*/
 }

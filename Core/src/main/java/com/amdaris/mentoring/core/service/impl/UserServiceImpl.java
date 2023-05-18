@@ -9,7 +9,7 @@ import com.amdaris.mentoring.core.repository.UserRepository;
 import com.amdaris.mentoring.core.service.BucketService;
 import com.amdaris.mentoring.core.service.UserService;
 import com.amdaris.mentoring.core.util.PageView;
-import jakarta.persistence.EntityExistsException;
+import javax.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -1,6 +1,6 @@
 package com.amdaris.mentoring.core.controller;
 
-import com.amdaris.mentoring.core.dto.BucketDto;
+import com.amdaris.mentoring.common.model.BucketDetails;
 import com.amdaris.mentoring.core.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class OrderCheckoutController {
     private final OrderService orderService;
 
     @PostMapping(value = {"/{transId}"}, produces = "application/json")
-    ResponseEntity<?> create(@RequestBody BucketDto bucket, @PathVariable UUID transId) {
+    ResponseEntity<?> create(@RequestBody BucketDetails bucket, @PathVariable UUID transId) {
         log.info("Try to save new order for bucket id - {}", bucket.getId());
         return ResponseEntity.ok(orderService.checkout(bucket, transId));
     }

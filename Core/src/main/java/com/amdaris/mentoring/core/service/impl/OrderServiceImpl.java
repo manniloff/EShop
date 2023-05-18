@@ -1,6 +1,8 @@
 package com.amdaris.mentoring.core.service.impl;
 
-import com.amdaris.mentoring.core.dto.BucketDto;
+import com.amdaris.mentoring.common.model.BucketDetails;
+import com.amdaris.mentoring.common.model.OrderInfo;
+import com.amdaris.mentoring.common.model.ProductDetails;
 import com.amdaris.mentoring.core.dto.OrderDto;
 import com.amdaris.mentoring.core.dto.converter.OrderConverter;
 import com.amdaris.mentoring.core.dto.criteria.OrderSearchCriteria;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import java.time.LocalDateTime;
@@ -38,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Page<OrderDto> findByCriteria(OrderSearchCriteria criteria, PageView pageView) {
         List<String> statuses = Optional.ofNullable(criteria.getStatuses())
                 .orElse(Arrays.stream(OrderStatus.values()).map(OrderStatus::name).collect(Collectors.toList()));
@@ -45,15 +49,13 @@ public class OrderServiceImpl implements OrderService {
         List<Long> products = Optional.ofNullable(criteria.getProductIds())
                 .orElse(productRepository.findAll().stream().map(Product::getId).collect(Collectors.toList()));
 
-        Page<Order> result = orderRepository.findWithFilter(criteria.getStartPeriod(), criteria.getEndPeriod(),
+        return orderRepository.findWithFilter(criteria.getStartPeriod(), criteria.getEndPeriod(),
                 statuses,
                 products,
                 criteria.getMinOrderPrice(), criteria.getMaxOrderPrice(),
                 PageRequest.of(pageView.getPage(), pageView.getPageSize())
                         .withSort(pageView.getSortDirection(), pageView.getSort())
-        );
-
-        return result.map(order -> OrderConverter.toOrderDto.apply(order));
+        ).map(order -> OrderConverter.toOrderDto.apply(order));
     }
 
     @Override
@@ -105,9 +107,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDto checkout(BucketDto bucket, UUID transId) {
+    public OrderInfo checkout(BucketDetails bucket, UUID transId) {
         List<Product> products = productRepository.findAllByIdIn(bucket.getProductIds()
                 .keySet());
+
+        List<ProductDetails> productInfo = products.stream()
+                .map(product -> ProductDetails.builder()
+                        .title(product.getTitle())
+                        .price(product.getPrice())
+                        .count(bucket.getProductIds().get(product.getId()))
+                        .build())
+                .collect(Collectors.toList());
 
         Order order = Order.builder()
                 .transId(transId)
@@ -119,9 +129,11 @@ public class OrderServiceImpl implements OrderService {
                         .sum())
                 .build();
 
-        OrderDto newOrder = OrderConverter.toOrderDto.apply(orderRepository.save(order));
-        newOrder.setUserId(bucket.getId());
+        long orderId = orderRepository.save(order).getId();
 
-        return newOrder;
+        return OrderInfo.builder()
+                .id(orderId)
+                .products(productInfo)
+                .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.amdaris.mentoring.common.kafka.order;
 
+
 import com.amdaris.mentoring.common.model.OrderDetails;
 import com.amdaris.mentoring.common.util.json.JsonCustomDeserializer;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -31,8 +32,7 @@ public class OrderDetailsKafkaConfiguration {
     private String paymentTopic;
 
     public NewTopic createTopic(String topicName) {
-        return TopicBuilder.name(topicName)
-                .build();
+        return TopicBuilder.name(topicName).build();
     }
 
     @Bean
@@ -54,8 +54,7 @@ public class OrderDetailsKafkaConfiguration {
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderDetails>> factory(
-            ConsumerFactory<String, OrderDetails> consumerFactory) {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, OrderDetails>> factory(ConsumerFactory<String, OrderDetails> consumerFactory) {
         ConcurrentKafkaListenerContainerFactory<String, OrderDetails> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
 

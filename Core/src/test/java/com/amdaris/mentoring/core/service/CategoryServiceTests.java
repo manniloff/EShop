@@ -1,7 +1,7 @@
 package com.amdaris.mentoring.core.service;
 
 import com.amdaris.mentoring.core.dto.CategoryDto;
-import jakarta.persistence.EntityExistsException;
+import javax.persistence.EntityExistsException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -2,9 +2,11 @@ package com.amdaris.mentoring.payment.service.impl;
 
 import com.amdaris.mentoring.payment.dto.PaymentMethodDto;
 import com.amdaris.mentoring.payment.dto.converter.PaymentMethodConverter;
+import com.amdaris.mentoring.payment.model.PaymentHistory;
 import com.amdaris.mentoring.payment.model.PaymentMethod;
-import com.amdaris.mentoring.payment.service.PaymentMethodService;
+import com.amdaris.mentoring.payment.repository.PaymentHistoryRepository;
 import com.amdaris.mentoring.payment.repository.PaymentMethodRepository;
+import com.amdaris.mentoring.payment.service.PaymentMethodService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +14,29 @@ import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentMethodServiceImpl implements PaymentMethodService {
     private final PaymentMethodRepository paymentMethodRepository;
+    private final PaymentHistoryRepository paymentHistoryRepository;
 
     @Override
     public List<PaymentMethodDto> findAll() {
+        return paymentMethodRepository.findAll()
+                .stream()
+                .map(PaymentMethodConverter.toPaymentMethodDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PaymentMethodDto> findInfo(UUID transId) {
+        paymentHistoryRepository.save(PaymentHistory.builder()
+                .transId(transId)
+                .build());
+
         return paymentMethodRepository.findAll()
                 .stream()
                 .map(PaymentMethodConverter.toPaymentMethodDto)

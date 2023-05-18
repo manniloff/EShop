@@ -6,7 +6,7 @@ import com.amdaris.mentoring.core.dto.converter.AddressConverter;
 import com.amdaris.mentoring.core.model.Address;
 import com.amdaris.mentoring.core.repository.AddressRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityExistsException;
+import javax.persistence.EntityExistsException;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

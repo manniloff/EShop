@@ -1,13 +1,15 @@
-package com.amdaris.mentoring.common.model;
+package com.amdaris.mentoring.common.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-public class ShipmentInfo {
+@NoArgsConstructor
+public class ShipmentMethodDto {
     private String title;
     private String country;
     private String city;

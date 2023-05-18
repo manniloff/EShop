@@ -1,6 +1,7 @@
 package com.amdaris.mentoring.core.service;
 
-import com.amdaris.mentoring.core.dto.BucketDto;
+import com.amdaris.mentoring.common.model.BucketDetails;
+import com.amdaris.mentoring.common.model.OrderInfo;
 import com.amdaris.mentoring.core.dto.OrderDto;
 import com.amdaris.mentoring.core.dto.criteria.OrderSearchCriteria;
 import com.amdaris.mentoring.core.util.PageView;
@@ -24,5 +25,5 @@ public interface OrderService {
 
     void clear();
 
-    OrderDto checkout(BucketDto bucket, UUID transId);
+    OrderInfo checkout(BucketDetails bucket, UUID transId);
 }

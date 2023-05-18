@@ -1,6 +1,6 @@
 package com.amdaris.mentoring.core.model;
 
-import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -23,7 +23,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {
-
             CascadeType.MERGE,
             CascadeType.DETACH,
             CascadeType.REMOVE
