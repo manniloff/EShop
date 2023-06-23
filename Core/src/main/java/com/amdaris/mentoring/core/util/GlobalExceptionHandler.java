@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import jakarta.persistence.EntityExistsException;
+import javax.persistence.EntityExistsException;
 import java.util.NoSuchElementException;
 
 @Slf4j

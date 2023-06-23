@@ -1,8 +1,7 @@
 package com.amdaris.mentoring.payment.model;
 
-import lombok.*;
-
 import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Data

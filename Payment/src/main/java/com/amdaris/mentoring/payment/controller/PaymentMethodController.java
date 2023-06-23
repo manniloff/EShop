@@ -6,20 +6,28 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/payment/method")
 @RequiredArgsConstructor
 public class PaymentMethodController {
     private final PaymentMethodService paymentMethodService;
 
     @GetMapping(value = {"", "/"}, produces = "application/json")
-    public ResponseEntity<?> findAll() {
+    public ResponseEntity<List<PaymentMethodDto>> findAll() {
         log.info("Getting payment method list");
         return ResponseEntity.ok(paymentMethodService.findAll());
+    }
+
+    @GetMapping(value = "/checkout/{transId}", produces = "application/json")
+    public List<PaymentMethodDto> getPaymentInfo(@PathVariable UUID transId) {
+        log.info("Getting payment method list and save payment for trans id - {}", transId);
+        return paymentMethodService.findInfo(transId);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

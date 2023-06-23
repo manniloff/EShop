@@ -1,5 +1,7 @@
 package com.amdaris.mentoring.common.model;
 
+import com.amdaris.mentoring.common.dto.PaymentMethodDto;
+import com.amdaris.mentoring.common.dto.ShipmentMethodDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,8 @@ import java.util.UUID;
 public class OrderDetails {
     private long id;
     private UUID transId;
-    private List<ProductInfo> products;
-    private List<ShipmentInfo> shipments;
-    private List<PaymentInfo> payments;
+    private List<ProductDetails> products;
+    private List<ShipmentMethodDto> shipments;
+    private List<PaymentMethodDto> payments;
 }
 

@@ -8,7 +8,7 @@ import com.amdaris.mentoring.core.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.EntityExistsException;
+import javax.persistence.EntityExistsException;
 
 import java.util.List;
 import java.util.NoSuchElementException;

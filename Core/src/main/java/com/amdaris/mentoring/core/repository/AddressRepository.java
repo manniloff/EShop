@@ -1,7 +1,7 @@
 package com.amdaris.mentoring.core.repository;
 
 import com.amdaris.mentoring.core.model.Address;
-import feign.Param;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
