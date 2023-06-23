@@ -1,21 +1,15 @@
 package com.amdaris.mentoring.core.service;
 
-import com.amdaris.mentoring.core.dto.AddressDto;
 import com.amdaris.mentoring.core.dto.UserDto;
-import com.amdaris.mentoring.core.dto.criteria.UserSearchCriteria;
-import com.amdaris.mentoring.core.model.User;
-import com.amdaris.mentoring.core.util.PageView;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 
-import jakarta.persistence.EntityExistsException;
+import javax.persistence.EntityExistsException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;

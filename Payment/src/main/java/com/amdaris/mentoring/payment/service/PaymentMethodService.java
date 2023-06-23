@@ -4,9 +4,12 @@ import com.amdaris.mentoring.payment.dto.PaymentMethodDto;
 import com.amdaris.mentoring.payment.model.PaymentMethod;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface PaymentMethodService {
     List<PaymentMethodDto> findAll();
+
+    List<PaymentMethodDto> findInfo(UUID transId);
 
     PaymentMethodDto findById(short id);
 

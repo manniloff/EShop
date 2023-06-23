@@ -16,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityExistsException;
+import javax.persistence.EntityExistsException;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    @Transactional
     public Page<ProductDto> findByCriteria(PageView pageView, ProductSearchCriteria productSearchCriteria) {
         List<Category> categories = Optional.ofNullable(productSearchCriteria.getCategories()).orElse(categoryRepository.findAll());
         return productRepository.findWithFilter(productSearchCriteria.getTitle(), productSearchCriteria.getDescription(),

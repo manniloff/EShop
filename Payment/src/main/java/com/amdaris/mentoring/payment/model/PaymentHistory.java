@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -15,6 +16,8 @@ public class PaymentHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private UUID transId;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_method_id", referencedColumnName = "id")

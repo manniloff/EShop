@@ -22,7 +22,7 @@ public class ProductConverter {
 
     public static Function<ProductDto, Product> toProduct =
             productDto -> Product.builder()
-                    .id(productDto.getId())
+                    .id(Optional.ofNullable(productDto.getId()).orElse(0L))
                     .title(productDto.getTitle())
                     .price(productDto.getPrice())
                     .description(productDto.getDescription())
