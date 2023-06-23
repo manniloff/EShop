@@ -15,8 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,8 +42,6 @@ public class OrderControllerTestsIT {
 
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setId(1);
-        orderDetails.setProductDetails(List.of(firstProductDetails, secondProductDetails));
-        orderDetails.setShippingPrice(10.0);
 
         mvc.perform(MockMvcRequestBuilders.post("/order/send/to/pay")
                         .contentType(MediaType.APPLICATION_JSON)
